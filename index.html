@@ -24,12 +24,12 @@
     @media(max-height:740px){.hero{height:270px}.guide{min-height:210px}.guide img{height:210px}.activity{min-height:330px}.stage-feedback{top:82px}.story-character{bottom:180px}}
     .level.story-paused{display:none!important}.world-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;opacity:0;transition:opacity .28s ease}.world-art.loaded{opacity:1}.world-card>.world-art,.map-card>.world-art{z-index:0}
   </style>
-  <link rel="stylesheet" href="assets/v3-child-mode.css?v=16.3">
-  <link rel="stylesheet" href="assets/v4-direct-stage.css?v=16.3">
-  <link rel="stylesheet" href="assets/v5-poem-cinematics.css?v=16.3">
-  <link rel="stylesheet" href="assets/v15-perfect-play.css?v=16.3">
-  <link rel="stylesheet" href="assets/v16-farm-study.css?v=16.3">
-  <link rel="stylesheet" href="assets/v16-lushan-pov.css?v=16.3">
+  <link rel="stylesheet" href="assets/v3-child-mode.css?v=16.4">
+  <link rel="stylesheet" href="assets/v4-direct-stage.css?v=16.4">
+  <link rel="stylesheet" href="assets/v5-poem-cinematics.css?v=16.4">
+  <link rel="stylesheet" href="assets/v15-perfect-play.css?v=16.4">
+  <link rel="stylesheet" href="assets/v16-farm-study.css?v=16.4">
+  <link rel="stylesheet" href="assets/v16-lushan-pov.css?v=16.4">
 </head>
 <body>
   <main class="app">
@@ -122,11 +122,11 @@
     function showResult(){const l=levels[currentLevel];completed.add(currentLevel);safeWriteArray('poetry-completed',[...completed]);el('levelScreen').classList.remove('active');el('resultScreen').classList.add('active');el('resultScreen').style.backgroundImage=`url('${l.bg}')`;el('resultReward').textContent=l.reward;el('resultHeading').textContent=l.steps[2].done;el('resultTitle').textContent=l.poemTitle;el('resultAuthor').textContent=l.author;el('resultPoem').innerHTML=l.poem.map((x,i)=>x+(i%2?'。':'，')).join('<br>');speak(audioText[currentLevel].result)}
     function speakPoem(id){speak(audioText[id].poem,.77,'scholar')}el('readPoem').onclick=()=>speakPoem(currentLevel);el('playAgain').onclick=()=>startLevel(currentLevel);el('resultMap').onclick=leaveLevel;document.querySelectorAll('.parent-open').forEach(b=>b.onclick=()=>{renderCollections();el('parentModal').classList.add('open')});el('closeParent').onclick=()=>el('parentModal').classList.remove('open');el('parentModal').onclick=e=>{if(e.target===el('parentModal'))el('parentModal').classList.remove('open')};renderCollections();
   </script>
-  <script src="assets/content/v3-guidance.js?v=16.3"></script>
-  <script src="assets/audio/v3-audio-map.js?v=16.3"></script>
-  <script src="assets/v3-child-mode.js?v=16.3"></script>
-  <script src="assets/v5-poem-cinematics.js?v=16.3"></script>
-  <script src="assets/v16-farm-study.js?v=16.3"></script>
-  <script src="assets/v16-lushan-pov.js?v=16.3"></script>
+  <script src="assets/content/v3-guidance.js?v=16.4"></script>
+  <script src="assets/audio/v3-audio-map.js?v=16.4"></script>
+  <script src="assets/v3-child-mode.js?v=16.4"></script>
+  <script src="assets/v5-poem-cinematics.js?v=16.4"></script>
+  <script src="assets/v16-farm-study.js?v=16.4"></script>
+  <script src="assets/v16-lushan-pov.js?v=16.4"></script>
 </body>
 </html>

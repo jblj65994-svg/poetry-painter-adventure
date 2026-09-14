@@ -149,8 +149,12 @@
 
   function clearMode(level) {
     if (!level) return;
-    MODE_CLASSES.forEach(className => level.classList.remove(className));
-    level.removeAttribute('data-v16-pov');
+    // MutationObserver watches the level class. Calling classList.remove for an
+    // absent token still emits an attribute mutation in Chromium, which used to
+    // queue clearMode forever as soon as a level became active.
+    const activeModes = MODE_CLASSES.filter(className => level.classList.contains(className));
+    if (activeModes.length) level.classList.remove.apply(level.classList, activeModes);
+    if (level.hasAttribute('data-v16-pov')) level.removeAttribute('data-v16-pov');
   }
 
   function setMode(level, scene) {
@@ -293,7 +297,9 @@
     observer = new MutationObserver(queueMutationInspection);
     observer.observe(level, {
       attributes: true,
-      attributeFilter: ['class', 'data-task'],
+      // Mode classes are written by this module. Watching them causes the
+      // observer to react to its own cleanup; task changes are sufficient.
+      attributeFilter: ['data-task'],
       childList: false,
       subtree: false
     });
