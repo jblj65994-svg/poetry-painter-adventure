@@ -1,0 +1,51 @@
+{
+  "version": "17.0.0",
+  "format": {
+    "container": "WAV",
+    "codec": "PCM signed 16-bit little-endian",
+    "sampleRate": 24000,
+    "channels": 1
+  },
+  "mixPolicy": {
+    "music": false,
+    "characterSpeech": false,
+    "description": "Short, soft one-shot effects. A new visual effect or scene stops the previous sound; narration remains the foreground audio."
+  },
+  "clips": {
+    "walk-footsteps-v17.wav": "Six soft grass footsteps while approaching the pavilion",
+    "walk-arrive-v17.wav": "Final footfall and gentle arrival glint",
+    "paddle-water-v17.wav": "Two paddle strokes with wood and small water splashes",
+    "crane-wings-wind-v17.wav": "Two broad wingbeats through soft air",
+    "snowfall-v17.wav": "Quiet snowy air with sparse ice sparkles",
+    "plum-sniff-sparkle-v17.wav": "Light inhale, fragrance curl, and small bright sparkles",
+    "snow-plum-harmony-v17.wav": "Snow hush resolving into warm paired chimes",
+    "petals-compost-v17.wav": "Petal flutter followed by soft compost-soil landings",
+    "fertilizer-pour-v17.wav": "Gentle granular fertilizer cascade",
+    "soil-fed-sparkle-v17.wav": "Warm soil response and happy sparkle expression",
+    "watering-nozzle-v17.wav": "Water stream from the can nozzle with individual droplets",
+    "sprout-rise-v17.wav": "Soil pop and a rising sprout gesture",
+    "young-plant-unfurl-v17.wav": "Leaves softly unfurling",
+    "flower-bloom-v17.wav": "A small fan of rounded bloom chimes",
+    "page-turn-v17.wav": "Paper page turn and book settling",
+    "seed-drop-v17.wav": "Single seed dropping into the pot",
+    "soil-cover-v17.wav": "Several loose-earth strokes covering the seed",
+    "night-wait-v17.wav": "One-shot night passage with quiet distant tones",
+    "ui-touch-v17.wav": "Soft general touch",
+    "ui-continue-v17.wav": "Short two-note continue cue",
+    "ui-success-v17.wav": "Gentle four-note success cue"
+  },
+  "praise": {
+    "praise-lushan-0-v17.mp3": "xiaohei / Yunxia",
+    "praise-lushan-1-v17.mp3": "xiaohei / Yunxia",
+    "praise-lushan-2-v17.mp3": "xiaohei / Yunxia",
+    "praise-xuemei-0-v17.mp3": "teacher / Xiaoxiao",
+    "praise-xuemei-1-v17.mp3": "teacher / Xiaoxiao",
+    "praise-xuemei-2-v17.mp3": "teacher / Xiaoxiao",
+    "praise-flowers-0-v17.mp3": "tangyun / Xiaoyi",
+    "praise-flowers-1-v17.mp3": "tangyun / Xiaoyi",
+    "praise-flowers-2-v17.mp3": "tangyun / Xiaoyi",
+    "praise-study-0-v17.mp3": "scholar / Yunxi",
+    "praise-study-1-v17.mp3": "scholar / Yunxi",
+    "praise-study-2-v17.mp3": "scholar / Yunxi"
+  }
+}

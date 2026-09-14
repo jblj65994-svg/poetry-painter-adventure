@@ -1,0 +1,133 @@
+/* V17: optional reading and interaction guidance for children aged 4-6. */
+:root {
+  --v17-ruby-color: #6354a6;
+  --v17-cue-color: rgba(255, 211, 82, .96);
+  --v17-cue-soft: rgba(255, 232, 139, .62);
+  --v17-cue-edge: rgba(255, 255, 255, .96);
+}
+
+/* Small children need a forgiving touch target even for utility controls. */
+.icon-btn,
+.back,
+.speak {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  min-height: 46px;
+}
+
+.v17-ruby-ready {
+  line-height: 2.05;
+}
+
+#resultPoem.v17-ruby-ready,
+.poem-lines.v17-ruby-ready {
+  line-height: 2.2;
+}
+
+ruby[data-v17-ruby] {
+  ruby-align: center;
+  ruby-position: over;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+ruby[data-v17-ruby] + ruby[data-v17-ruby] {
+  margin-inline-start: .08em;
+}
+
+#resultPoem ruby[data-v17-ruby] rt {
+  font-size: .43em;
+}
+
+ruby[data-v17-ruby] rt {
+  color: var(--v17-ruby-color);
+  font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  font-size: .48em;
+  font-weight: 800;
+  letter-spacing: .035em;
+  line-height: 1;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .92);
+  user-select: none;
+}
+
+ruby[data-v17-ruby] rp {
+  display: none;
+}
+
+.v17-cue-static {
+  position: relative;
+}
+
+.v17-cue-host {
+  isolation: isolate;
+}
+
+.v17-cue-ring {
+  position: absolute;
+  z-index: 30;
+  inset: 3px;
+  border: 3px solid var(--v17-cue-edge);
+  border-radius: inherit;
+  box-shadow:
+    0 0 0 3px var(--v17-cue-color),
+    0 0 18px 5px var(--v17-cue-soft);
+  opacity: .82;
+  pointer-events: none;
+  transform: scale(.96);
+  transform-origin: 50% 50%;
+  animation: v17-soft-cue 2.15s ease-in-out infinite;
+  animation-delay: var(--v17-cue-delay, 0s);
+  will-change: transform, opacity, box-shadow;
+}
+
+.drop-target > .v17-cue-ring {
+  inset: 5px;
+  border-style: dashed;
+}
+
+#taskContinue > .v17-cue-ring {
+  inset: -3px;
+}
+
+.v17-cue-host:focus-visible {
+  outline: 4px solid #fff;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 7px rgba(105, 86, 184, .78);
+}
+
+@keyframes v17-soft-cue {
+  0%, 100% {
+    opacity: .68;
+    transform: scale(.96);
+    box-shadow:
+      0 0 0 2px rgba(255, 211, 82, .88),
+      0 0 10px 2px rgba(255, 232, 139, .4);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.055);
+    box-shadow:
+      0 0 0 4px rgba(255, 211, 82, 1),
+      0 0 22px 8px rgba(255, 232, 139, .72);
+  }
+}
+
+@media (max-width: 360px) {
+  ruby[data-v17-ruby] rt {
+    font-size: .44em;
+    letter-spacing: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v17-cue-ring {
+    animation: none;
+    opacity: .94;
+    transform: none;
+    box-shadow:
+      0 0 0 3px var(--v17-cue-color),
+      0 0 13px 4px rgba(255, 232, 139, .54);
+    will-change: auto;
+  }
+}

@@ -25,7 +25,7 @@
   transition: bottom .5s cubic-bezier(.2,.8,.25,1);
 }
 
-.level .guide img {
+.level .guide > #guideImage {
   height: min(34vh, 286px);
   transition: transform .45s cubic-bezier(.2,.9,.25,1), filter .3s ease;
 }
@@ -52,7 +52,7 @@
   pointer-events: none;
 }
 
-.level.is-performing .guide img {
+.level.is-performing .guide > #guideImage {
   transform: translateY(-10px) scale(1.08);
 }
 
@@ -345,7 +345,7 @@
 @media (max-height: 740px) {
   :root { --v3-panel: min(52vh, 350px); --v3-peek: 62px; }
   @supports (height: 100dvh) { :root { --v3-panel: min(52dvh, 350px); } }
-  .level .guide img { height: min(29vh, 215px); }
+  .level .guide > #guideImage { height: min(29vh, 215px); }
   .guide-bubble { top: 13px; padding: 10px 12px; font-size: 13px; }
   .stage-feedback { top: 76px; padding: 7px 9px; }
   .task-btn { min-height: 78px; }
@@ -359,6 +359,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .level .guide, .level .activity, .guide img { transition-duration: .12s; }
+  .level .guide, .level .activity, .guide > #guideImage { transition-duration: .12s; }
   .coach-hand, .coach-ring, .narration-status *, .gesture-arrow, .hint-target, .continue.coach-next { animation-duration: 2.4s; }
 }

@@ -1,5 +1,5 @@
 window.V3_GUIDANCE = {
-  "version": "16.4",
+  "version": "17.0",
   "audience": "4-6岁，以4岁、不识字儿童可独立完成为基准",
   "globalRules": {
     "completionPrinciple": "每关一个实体物件、一个动作、一个明确结果；遮住文字仍能完成",
