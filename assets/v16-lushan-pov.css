@@ -1,0 +1,1329 @@
+/* V16 · 庐山三关第一视角镜头层
+   只使用自然景物、木船、羽翼和雾气；不绘制路线、提示线或几何占位图。 */
+
+/* Keep every playable object fully inside the phone canvas before the POV
+   transition starts.  Right anchoring avoids the clipping seen in V15. */
+.task-lushan-0 .target-pavilion {
+  left: 71%;
+  right: auto;
+  top: auto;
+  bottom: 3%;
+  width: clamp(172px, 46vw, 198px);
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 428 / 443;
+  transform: translateX(-50%);
+}
+
+.task-lushan-1 .target-boat {
+  left: 64%;
+  right: auto;
+  top: auto;
+  bottom: 4%;
+  width: clamp(174px, 47vw, 202px);
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 443 / 442;
+  transform: translateX(-50%);
+}
+
+.task-lushan-2 .target-crane {
+  left: 68%;
+  right: auto;
+  top: 39%;
+  width: clamp(158px, 43vw, 186px);
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 443 / 442;
+  transform: translate(-50%, -50%);
+}
+
+#stageFx.v16-pov-host {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  overflow: hidden;
+  contain: paint;
+  pointer-events: none;
+}
+
+#stageFx .v16-pov,
+#stageFx .v16-pov div,
+#stageFx .v16-pov i {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  filter: none;
+  pointer-events: none;
+}
+
+#stageFx .v16-pov {
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  background: #8acbe4;
+  animation: v16PovReveal 260ms ease-out both;
+  transform: translateZ(0);
+}
+
+/* panorama and peak are two beats of one walk. The second beat must continue
+   the same camera instead of fading the entire scene out and back in. */
+#stageFx .v16-pov-walk.v16-walk-arrive {
+  animation: none;
+}
+
+#stageFx .v16-landscape {
+  inset: -7%;
+  background-image: url('scenes/lushan-bg-clean-v10.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center 54%;
+  transform-origin: 50% 62%;
+  backface-visibility: hidden;
+  will-change: transform, filter;
+}
+
+.level.v16-pov-active .world-ambience,
+.level.v16-pov-active .scene-state {
+  opacity: 0 !important;
+  transition: opacity 160ms ease;
+}
+
+.level.v16-pov-active #guideImage {
+  opacity: 0 !important;
+  transform: translate3d(-24px, 18px, 0) scale(.88) !important;
+  animation: none !important;
+  transition: opacity 180ms ease, transform 260ms ease !important;
+}
+
+.level.v16-pov-active.is-performing #taskArea {
+  opacity: 0 !important;
+}
+
+.level.v16-pov-active.is-performing .guide-bubble {
+  opacity: .08;
+  transform: translate3d(8px, -5px, 0) scale(.96);
+  transition: opacity 210ms ease, transform 260ms ease;
+}
+
+/* The generated perspective plates already contain coherent painted banks,
+   cliffs and near grass.  Retire the old sliced duplicates so no hard seam or
+   mismatched perspective can appear during motion. */
+#stageFx .v16-pov-walk .v16-grass-layer,
+#stageFx .v16-pov-walk .v16-rail,
+#stageFx .v16-pov-walk .v16-step-edge,
+#stageFx .v16-pov-boat .v16-bank,
+#stageFx .v16-pov-flight .v16-flight-cliff {
+  display: none !important;
+}
+
+#stageFx .v16-natural-vignette {
+  z-index: 50;
+  inset: -1px;
+  background:
+    radial-gradient(ellipse at 50% 45%, transparent 46%, rgba(16, 61, 67, .08) 76%, rgba(19, 42, 43, .25) 112%),
+    linear-gradient(180deg, rgba(255, 255, 255, .06), transparent 31%, rgba(15, 47, 44, .07));
+  box-shadow: inset 0 0 34px rgba(28, 57, 55, .12);
+}
+
+@keyframes v16PovReveal {
+  from { opacity: 0; filter: brightness(1.08) blur(1.5px); }
+  to { opacity: 1; filter: none; }
+}
+
+/* --------------------------------------------------------------------------
+   第一关：小黑步行靠近小亭。远景、亭子、栏杆、近草依次增加速度，
+   每一步只有几像素的起伏，让孩子能看懂“人走近了”。
+   -------------------------------------------------------------------------- */
+
+#stageFx .v16-pov-walk {
+  background: #91cee1;
+  --v16-walk-time: 1320ms;
+}
+
+#stageFx .v16-walk-camera {
+  z-index: 2;
+  inset: -6%;
+  transform-origin: 50% 72%;
+  will-change: transform;
+}
+
+#stageFx .v16-walk-run .v16-walk-camera {
+  animation: v16WalkBob var(--v16-walk-time) cubic-bezier(.25, .05, .18, 1) both;
+}
+
+#stageFx .v16-walk-arrive .v16-walk-camera {
+  animation: v16WalkSettle var(--v16-walk-time) cubic-bezier(.22, .04, .18, 1) both;
+}
+
+#stageFx .v16-walk-landscape {
+  background-image: url('scenes/lushan-ridge-v15.jpg');
+  background-position: center 61%;
+  filter: saturate(1.04) brightness(1.02);
+}
+
+#stageFx .v16-walk-run .v16-walk-landscape {
+  animation: v16WalkLandscape var(--v16-walk-time) cubic-bezier(.2, .04, .16, 1) both;
+}
+
+#stageFx .v16-walk-arrive .v16-walk-landscape {
+  animation: v16WalkLandscapeArrive var(--v16-walk-time) cubic-bezier(.2, .06, .18, 1) both;
+}
+
+#stageFx .v16-walk-distance-haze {
+  z-index: 2;
+  left: -10%;
+  right: -10%;
+  top: 38%;
+  height: 28%;
+  background:
+    radial-gradient(ellipse at 24% 58%, rgba(255,255,255,.54), transparent 42%),
+    radial-gradient(ellipse at 71% 38%, rgba(238,253,255,.48), transparent 45%);
+  opacity: .52;
+  filter: blur(9px);
+  animation: v16WalkHaze var(--v16-walk-time) ease-in-out both;
+}
+
+#stageFx .v16-walk-ground {
+  z-index: 3;
+  left: -13%;
+  right: -13%;
+  bottom: -16%;
+  height: 56%;
+  transform-origin: 50% 100%;
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(215, 185, 92, .12), transparent 37%),
+    radial-gradient(ellipse at 47% 88%, rgba(52, 105, 50, .38), transparent 58%),
+    linear-gradient(180deg, transparent 0 18%, rgba(80, 146, 62, .08) 42%, rgba(27, 89, 48, .27) 100%);
+  mix-blend-mode: multiply;
+}
+
+#stageFx .v16-walk-run .v16-walk-ground {
+  animation: v16GroundApproach var(--v16-walk-time) cubic-bezier(.18, .05, .2, 1) both;
+}
+
+#stageFx .v16-walk-arrive .v16-walk-ground {
+  animation: v16GroundSettle var(--v16-walk-time) cubic-bezier(.18, .05, .2, 1) both;
+}
+
+#stageFx .v16-ground-shadow {
+  left: 31%;
+  right: 31%;
+  bottom: 8%;
+  height: 21%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(20, 59, 40, .23), transparent 68%);
+  filter: blur(8px);
+  animation: v16FootfallShadow 440ms ease-in-out 3 both;
+}
+
+#stageFx .v16-pavilion {
+  z-index: 5;
+  left: 71%;
+  bottom: 3%;
+  width: min(49vw, 210px);
+  height: min(51vw, 218px);
+  max-width: 210px;
+  max-height: 218px;
+  background: url('objects/v15/pavilion-v15.png') center bottom / contain no-repeat;
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 13px 12px rgba(42, 52, 38, .31));
+  will-change: transform, opacity;
+}
+
+#stageFx .v16-walk-run .v16-pavilion {
+  animation: v16PavilionApproach var(--v16-walk-time) cubic-bezier(.2, .02, .16, 1) both;
+}
+
+#stageFx .v16-walk-arrive .v16-pavilion {
+  animation: v16PavilionLand var(--v16-walk-time) cubic-bezier(.18, .65, .2, 1) both;
+}
+
+#stageFx .v16-walk-light {
+  z-index: 6;
+  inset: -8%;
+  background:
+    radial-gradient(ellipse at 13% 4%, rgba(255,255,244,.35), transparent 34%),
+    linear-gradient(112deg, rgba(255,255,255,.16), transparent 29%);
+  mix-blend-mode: screen;
+  animation: v16LightBreathe var(--v16-walk-time) ease-in-out both;
+}
+
+#stageFx .v16-grass-layer {
+  z-index: 12;
+  inset: 0;
+  overflow: hidden;
+}
+
+#stageFx .v16-grass-tuft {
+  left: var(--v16-x);
+  bottom: -8px;
+  width: 7px;
+  height: 76px;
+  border-radius: 95% 8% 92% 10%;
+  transform-origin: 50% 100%;
+  background: linear-gradient(90deg, #174d33, #5e9e3f 54%, #a8c94d 76%, #2d7040);
+  box-shadow:
+    -10px 7px 0 -1px #2e7040,
+    11px 13px 0 -1px #548e3b,
+    -18px 21px 0 -2px #1f5d39,
+    18px 27px 0 -2px #79a844;
+  opacity: .9;
+  will-change: transform;
+  animation: v16GrassRush var(--v16-walk-time) var(--v16-delay) cubic-bezier(.18, .05, .15, 1) both;
+}
+
+#stageFx .tuft-0,
+#stageFx .tuft-10 { height: 116px; width: 10px; bottom: -18px; }
+#stageFx .tuft-1,
+#stageFx .tuft-9 { height: 98px; bottom: -12px; }
+#stageFx .tuft-2,
+#stageFx .tuft-8 { height: 83px; opacity: .84; }
+#stageFx .tuft-3,
+#stageFx .tuft-7 { height: 65px; opacity: .73; }
+#stageFx .tuft-4,
+#stageFx .tuft-6 { height: 48px; opacity: .62; }
+#stageFx .tuft-5 { height: 35px; opacity: .44; }
+
+#stageFx .v16-rail {
+  z-index: 10;
+  bottom: 6%;
+  width: 47%;
+  height: 101px;
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 7px 5px rgba(39, 46, 31, .3));
+  will-change: transform, opacity;
+}
+
+#stageFx .v16-rail-left { left: -8%; }
+#stageFx .v16-rail-right { right: -8%; transform: scaleX(-1); }
+
+#stageFx .v16-rail::before,
+#stageFx .v16-rail::after {
+  content: '';
+  position: absolute;
+  left: -4%;
+  width: 112%;
+  height: 13px;
+  border-radius: 44% 52% 42% 48%;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.24), transparent 24%),
+    linear-gradient(90deg, #56341f, #98623a 24%, #684126 55%, #a16a3d 82%, #4e301f);
+  box-shadow: inset 0 -4px 4px rgba(54,31,19,.28);
+  transform: rotate(4deg);
+}
+
+#stageFx .v16-rail::before { bottom: 55px; }
+#stageFx .v16-rail::after { bottom: 20px; height: 10px; opacity: .88; }
+
+#stageFx .v16-rail i {
+  bottom: 0;
+  width: 17px;
+  height: 92px;
+  border-radius: 9px 9px 4px 4px;
+  background:
+    radial-gradient(circle at 45% 9%, #b47a49 0 6px, transparent 7px),
+    linear-gradient(90deg, #54321f, #9a6238 45%, #704526 72%, #442a1c);
+  box-shadow: inset 3px 0 rgba(255,255,255,.08), inset -3px 0 rgba(35,20,14,.15);
+}
+
+#stageFx .v16-rail i:nth-child(1) { left: 11%; height: 82px; }
+#stageFx .v16-rail i:nth-child(2) { left: 50%; height: 96px; }
+#stageFx .v16-rail i:nth-child(3) { right: 4%; height: 88px; }
+
+#stageFx .v16-walk-run .v16-rail-left {
+  animation: v16RailLeft var(--v16-walk-time) cubic-bezier(.16, .03, .15, 1) both;
+}
+#stageFx .v16-walk-run .v16-rail-right {
+  animation: v16RailRight var(--v16-walk-time) cubic-bezier(.16, .03, .15, 1) both;
+}
+#stageFx .v16-walk-arrive .v16-rail-left {
+  animation: v16RailLeftSettle var(--v16-walk-time) cubic-bezier(.18, .2, .2, 1) both;
+}
+#stageFx .v16-walk-arrive .v16-rail-right {
+  animation: v16RailRightSettle var(--v16-walk-time) cubic-bezier(.18, .2, .2, 1) both;
+}
+
+#stageFx .v16-step-edge {
+  z-index: 16;
+  bottom: -7%;
+  width: 24%;
+  height: 48%;
+  border-radius: 48%;
+  background:
+    radial-gradient(ellipse at 50% 86%, rgba(21,72,44,.78), transparent 52%),
+    radial-gradient(ellipse at 28% 52%, rgba(72,132,52,.54), transparent 36%);
+  filter: blur(5px);
+  opacity: 0;
+}
+
+#stageFx .v16-step-edge-left { left: -9%; animation: v16EdgePassLeft 660ms ease-out 2 both; }
+#stageFx .v16-step-edge-right { right: -9%; animation: v16EdgePassRight 660ms ease-out 2 both; }
+
+#stageFx .v16-walk-foreground {
+  z-index: 15;
+  left: -7%;
+  right: -7%;
+  bottom: 4%;
+  height: min(57vw, 246px);
+  max-height: 246px;
+  background: url('objects/v16/lushan-walk-pov-v16.png') center bottom / 100% auto no-repeat;
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 -3px 7px rgba(27,72,45,.12));
+  animation: v16WalkForeground var(--v16-walk-time) cubic-bezier(.18,.04,.16,1) both;
+}
+
+#stageFx .v16-walk-arrive .v16-walk-foreground {
+  animation: v16WalkForegroundArrive var(--v16-walk-time) cubic-bezier(.18,.04,.16,1) both;
+}
+
+@keyframes v16WalkBob {
+  0% { transform: translate3d(0, 1px, 0) rotate(-.08deg); }
+  18% { transform: translate3d(-2px, -5px, 0) rotate(.16deg); }
+  36% { transform: translate3d(2px, 3px, 0) rotate(-.12deg); }
+  55% { transform: translate3d(-1px, -6px, 0) rotate(.13deg); }
+  75% { transform: translate3d(1px, 2px, 0) rotate(-.08deg); }
+  91% { transform: translate3d(0, -3px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes v16WalkSettle {
+  0% { transform: translate3d(0, 2px, 0); }
+  24% { transform: translate3d(-2px, -5px, 0) rotate(.1deg); }
+  49% { transform: translate3d(2px, 2px, 0) rotate(-.08deg); }
+  72% { transform: translate3d(-1px, -3px, 0); }
+  100% { transform: none; }
+}
+
+@keyframes v16WalkLandscape {
+  0% { transform: scale(1.015) translate3d(0, -1.5%, 0); filter: saturate(.94) brightness(1.04); }
+  44% { transform: scale(1.105) translate3d(-.8%, 1.5%, 0); }
+  76% { transform: scale(1.19) translate3d(.5%, 3%, 0); }
+  100% { transform: scale(1.27) translate3d(0, 4.7%, 0); filter: saturate(1.08) brightness(1.01); }
+}
+
+@keyframes v16WalkLandscapeArrive {
+  0% { transform: scale(1.255) translate3d(0, 4.2%, 0); }
+  45% { transform: scale(1.32) translate3d(-.7%, 5.7%, 0); }
+  78% { transform: scale(1.36) translate3d(.25%, 6.4%, 0); }
+  100% { transform: scale(1.37) translate3d(0, 6%, 0); filter: saturate(1.09); }
+}
+
+@keyframes v16WalkHaze {
+  from { transform: translateX(-5%) scale(.92); opacity: .7; }
+  58% { opacity: .32; }
+  to { transform: translateX(8%) scale(1.25); opacity: .12; }
+}
+
+@keyframes v16GroundApproach {
+  from { transform: perspective(420px) rotateX(13deg) scale(.68) translateY(-18%); opacity: .18; }
+  to { transform: perspective(420px) rotateX(4deg) scale(1.34) translateY(5%); opacity: .74; }
+}
+
+@keyframes v16GroundSettle {
+  from { transform: perspective(420px) rotateX(4deg) scale(1.28); opacity: .64; }
+  to { transform: perspective(420px) rotateX(1deg) scale(1.48) translateY(4%); opacity: .8; }
+}
+
+@keyframes v16PavilionApproach {
+  0% { transform: translate3d(-50%, -126px, 0) scale(.29); opacity: .46; filter: blur(1.5px); }
+  38% { transform: translate3d(-51%, -91px, 0) scale(.49); opacity: .73; filter: blur(.7px); }
+  72% { transform: translate3d(-49%, -44px, 0) scale(.73); opacity: .92; filter: none; }
+  92% { transform: translate3d(-50%, 4px, 0) scale(1.03); opacity: 1; }
+  100% { transform: translate3d(-50%, 0, 0) scale(1); opacity: 1; }
+}
+
+@keyframes v16PavilionLand {
+  0% { transform: translate3d(-50%, 0, 0) scale(1); opacity: 1; }
+  58% { transform: translate3d(-50%, 7px, 0) scale(1.13); opacity: 1; }
+  78% { transform: translate3d(-50%, 1px, 0) scale(1.08); }
+  100% { transform: translate3d(-50%, 3px, 0) scale(1.1); }
+}
+
+@keyframes v16GrassRush {
+  0% { transform: translate3d(0, -42px, 0) scale(.38) rotate(calc(var(--v16-lean) * .25)); opacity: .18; }
+  52% { opacity: .76; }
+  100% { transform: translate3d(0, 18px, 0) scale(1.18) rotate(var(--v16-lean)); opacity: .96; }
+}
+
+@keyframes v16RailLeft {
+  from { transform: translate3d(34px, -74px, 0) scale(.52) rotate(-2deg); opacity: .2; }
+  to { transform: translate3d(-24px, 18px, 0) scale(1.16) rotate(-4deg); opacity: .96; }
+}
+@keyframes v16RailRight {
+  from { transform: scaleX(-1) translate3d(34px, -74px, 0) scale(.52) rotate(-2deg); opacity: .2; }
+  to { transform: scaleX(-1) translate3d(-24px, 18px, 0) scale(1.16) rotate(-4deg); opacity: .96; }
+}
+@keyframes v16RailLeftSettle {
+  from { transform: translate3d(-11px, 2px, 0) scale(1); opacity: .86; }
+  to { transform: translate3d(-29px, 22px, 0) scale(1.21) rotate(-3deg); opacity: .98; }
+}
+@keyframes v16RailRightSettle {
+  from { transform: scaleX(-1) translate3d(-11px, 2px, 0) scale(1); opacity: .86; }
+  to { transform: scaleX(-1) translate3d(-29px, 22px, 0) scale(1.21) rotate(-3deg); opacity: .98; }
+}
+
+@keyframes v16EdgePassLeft {
+  0% { transform: translate3d(38px, -55px, 0) scale(.45); opacity: 0; }
+  42% { opacity: .5; }
+  100% { transform: translate3d(-42px, 38px, 0) scale(1.45); opacity: 0; }
+}
+@keyframes v16EdgePassRight {
+  0% { transform: translate3d(-38px, -55px, 0) scale(.45); opacity: 0; }
+  42% { opacity: .5; }
+  100% { transform: translate3d(42px, 38px, 0) scale(1.45); opacity: 0; }
+}
+@keyframes v16WalkForeground {
+  0% { transform: translate3d(0, 32px, 0) scale(.83); opacity: .56; }
+  22% { transform: translate3d(-3px, 17px, 0) scale(.9) rotate(.2deg); opacity: .82; }
+  47% { transform: translate3d(3px, 9px, 0) scale(.96) rotate(-.18deg); }
+  73% { transform: translate3d(-2px, 4px, 0) scale(1.01) rotate(.12deg); }
+  100% { transform: translate3d(0, 0, 0) scale(1.04); opacity: 1; }
+}
+@keyframes v16WalkForegroundArrive {
+  0% { transform: translate3d(0, 0, 0) scale(1.04); opacity: 1; }
+  28% { transform: translate3d(-2px, -4px, 0) scale(1.045) rotate(.12deg); }
+  57% { transform: translate3d(2px, 2px, 0) scale(1.052) rotate(-.1deg); }
+  78% { transform: translate3d(-1px, -2px, 0) scale(1.058); }
+  100% { transform: translate3d(0, 0, 0) scale(1.06); opacity: 1; }
+}
+@keyframes v16FootfallShadow {
+  0%, 100% { transform: scale(.78); opacity: .13; }
+  52% { transform: scale(1.12); opacity: .38; }
+}
+@keyframes v16LightBreathe {
+  0% { opacity: .45; transform: translateX(-3%); }
+  55% { opacity: .72; }
+  100% { opacity: .54; transform: translateX(2%); }
+}
+
+/* --------------------------------------------------------------------------
+   第二关：船上第一视角。素材里只有右桨，因此只有右侧出现桨花；左右
+   船首浪来自船体推进。湖面纹理和远岸缩退共同表达“划向远处”。
+   -------------------------------------------------------------------------- */
+
+#stageFx .v16-pov-boat {
+  --v16-boat-time: 1800ms;
+  background: #73c5df;
+  perspective: 760px;
+}
+
+#stageFx .v16-boat-camera {
+  z-index: 2;
+  inset: -6%;
+  overflow: hidden;
+  animation: v16BoatCameraBob var(--v16-boat-time) cubic-bezier(.2, .05, .18, 1) both;
+}
+
+#stageFx .v16-boat-landscape {
+  background-image: url('scenes/lushan-boat-pov-v16.jpg');
+  background-position: center 57%;
+  animation: v16BoatHorizon var(--v16-boat-time) cubic-bezier(.2, .04, .18, 1) both;
+  filter: saturate(1.07) brightness(1.03);
+}
+
+#stageFx .v16-boat-haze {
+  z-index: 3;
+  left: -9%;
+  right: -9%;
+  top: 39%;
+  height: 26%;
+  background:
+    radial-gradient(ellipse at 38% 52%, rgba(255,255,255,.62), transparent 41%),
+    radial-gradient(ellipse at 72% 40%, rgba(244,253,255,.58), transparent 45%);
+  filter: blur(9px);
+  animation: v16BoatHaze var(--v16-boat-time) ease-in-out both;
+}
+
+#stageFx .v16-bank {
+  z-index: 5;
+  top: 39%;
+  width: 54%;
+  height: 38%;
+  background-image: url('scenes/lushan-boat-pov-v16.jpg');
+  background-repeat: no-repeat;
+  background-size: 230% auto;
+  filter: saturate(1.12) contrast(1.02) drop-shadow(0 5px 7px rgba(38,88,64,.18));
+  opacity: .98;
+  will-change: transform;
+}
+
+#stageFx .v16-bank-left {
+  left: -12%;
+  background-position: 6% 72%;
+  clip-path: polygon(0 0, 70% 7%, 88% 30%, 79% 44%, 98% 64%, 75% 82%, 63% 100%, 0 100%);
+  animation: v16BankLeft var(--v16-boat-time) cubic-bezier(.22, .03, .17, 1) both;
+}
+
+#stageFx .v16-bank-right {
+  right: -12%;
+  background-position: 96% 72%;
+  clip-path: polygon(100% 0, 30% 7%, 12% 30%, 21% 44%, 2% 64%, 25% 82%, 37% 100%, 100% 100%);
+  animation: v16BankRight var(--v16-boat-time) cubic-bezier(.22, .03, .17, 1) both;
+}
+
+#stageFx .v16-water-plane {
+  z-index: 7;
+  left: -13%;
+  right: -13%;
+  top: 51%;
+  bottom: -15%;
+  overflow: hidden;
+  clip-path: polygon(0 8%, 18% 5%, 34% 8%, 51% 3%, 67% 7%, 83% 4%, 100% 8%, 100% 100%, 0 100%);
+  background:
+    radial-gradient(ellipse at 50% -25%, rgba(255,255,255,.36) 0 8%, transparent 9% 19%, rgba(232,251,255,.23) 20% 21%, transparent 23% 31%, rgba(221,248,252,.2) 32% 33%, transparent 35%),
+    repeating-radial-gradient(ellipse at 50% -20%, rgba(239,253,255,.32) 0 1px, transparent 2px 19px),
+    linear-gradient(180deg, rgba(173,231,238,.18), rgba(72,184,208,.25) 54%, rgba(33,128,176,.3));
+  transform-origin: 50% 0;
+  mix-blend-mode: soft-light;
+  animation: v16WaterAdvance var(--v16-boat-time) cubic-bezier(.18, .03, .16, 1) both;
+}
+
+#stageFx .v16-water-glint {
+  width: 75px;
+  height: 17px;
+  border-top: 3px solid rgba(236,253,255,.68);
+  border-radius: 50%;
+  opacity: .72;
+  animation: v16GlintPass 760ms ease-in 2 both;
+}
+#stageFx .glint-1 { left: 13%; top: 20%; transform: rotate(-5deg); }
+#stageFx .glint-2 { right: 9%; top: 36%; width: 92px; animation-delay: 110ms; }
+#stageFx .glint-3 { left: 42%; top: 55%; width: 112px; animation-delay: 230ms; }
+#stageFx .glint-4 { left: 3%; top: 72%; width: 126px; animation-delay: 330ms; }
+
+#stageFx .v16-boat-body {
+  z-index: 22;
+  inset: 0;
+  transform-origin: 50% 100%;
+  animation: v16BoatBodyBob 900ms ease-in-out 2 both;
+}
+
+#stageFx .v16-boat-foreground {
+  z-index: 24;
+  left: -7%;
+  right: -7%;
+  bottom: -2%;
+  height: min(57vw, 246px);
+  max-height: 246px;
+  background: url('objects/v16/lushan-boat-pov-v16.png') center bottom / 100% auto no-repeat;
+  transform-origin: 88% 88%;
+  filter: drop-shadow(0 -4px 8px rgba(24,71,78,.2));
+  will-change: transform;
+  animation: v16BoatRightStroke 900ms cubic-bezier(.28,.03,.2,1) 2 both;
+}
+
+/* The painted paddle is baked into the foreground plate.  A small roll around
+   the right hand makes its catch readable while keeping the hull coherent. */
+#stageFx .v16-right-stroke-surge {
+  z-index: 29;
+  right: -5%;
+  bottom: 27%;
+  width: 31%;
+  height: 16%;
+  overflow: visible;
+  transform: rotate(-12deg);
+  transform-origin: 86% 72%;
+  animation: v16RightStrokeSurge 900ms cubic-bezier(.2,.02,.2,1) 2 both;
+}
+
+#stageFx .v16-right-stroke-surge i,
+#stageFx .v16-right-stroke-surge b {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+#stageFx .v16-right-stroke-surge i {
+  width: 102px;
+  height: 32px;
+  border: 4px solid rgba(235,253,255,.78);
+  border-left-color: transparent;
+  filter: blur(.35px) drop-shadow(0 2px 4px rgba(173,238,248,.55));
+  animation: v16RightCatchRing 900ms 405ms ease-out 2 both;
+}
+
+#stageFx .v16-right-stroke-surge b {
+  width: 76px;
+  height: 28px;
+  background:
+    radial-gradient(ellipse at 72% 25%, rgba(255,255,255,.9) 0 5%, transparent 7%),
+    radial-gradient(ellipse at 51% 44%, rgba(220,248,255,.82) 0 7%, transparent 9%),
+    radial-gradient(ellipse at 29% 69%, rgba(153,225,241,.72) 0 8%, transparent 10%);
+  filter: drop-shadow(0 2px 3px rgba(220,250,255,.42));
+  animation: v16RightCatchFoam 900ms 425ms ease-out 2 both;
+}
+
+#stageFx .v16-prow {
+  left: 21%;
+  right: 21%;
+  bottom: -12%;
+  height: 46%;
+  clip-path: polygon(46% 0, 54% 0, 94% 100%, 6% 100%);
+  background:
+    linear-gradient(90deg, rgba(50,25,14,.5), transparent 8% 91%, rgba(50,25,14,.52)),
+    repeating-linear-gradient(86deg, transparent 0 31px, rgba(74,37,20,.22) 32px 35px),
+    linear-gradient(90deg, #774226, #c17a42 21%, #d79a5d 49%, #b66c38 73%, #65351f);
+  box-shadow: inset 0 12px 14px rgba(255,221,171,.17), 0 -6px 12px rgba(34,73,74,.22);
+}
+
+#stageFx .v16-prow::before {
+  content: '';
+  position: absolute;
+  left: 47%;
+  top: 0;
+  bottom: 0;
+  width: 6%;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #5b2f1c, #d39859 48%, #63341d);
+  box-shadow: 0 0 5px rgba(48,25,16,.35);
+}
+
+#stageFx .v16-prow i {
+  left: 12%;
+  right: 12%;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(70,36,20,.34);
+}
+#stageFx .v16-prow i:nth-child(1) { top: 38%; left: 30%; right: 30%; }
+#stageFx .v16-prow i:nth-child(2) { top: 61%; left: 22%; right: 22%; }
+#stageFx .v16-prow i:nth-child(3) { top: 82%; }
+
+#stageFx .v16-gunwale {
+  bottom: 13%;
+  width: 59%;
+  height: 24px;
+  border-radius: 46% 54% 35% 45%;
+  background:
+    linear-gradient(180deg, rgba(255,224,181,.38), transparent 27%),
+    linear-gradient(90deg, #4e2919, #b76e3d 27%, #d18c4d 53%, #7a4024 100%);
+  box-shadow: 0 7px 8px rgba(31,65,64,.25), inset 0 -5px 5px rgba(53,27,17,.28);
+}
+#stageFx .v16-gunwale-left { left: -4%; transform: rotate(14deg); }
+#stageFx .v16-gunwale-right { right: -4%; transform: rotate(-14deg) scaleX(-1); }
+
+#stageFx .v16-oar {
+  z-index: 30;
+  bottom: 31%;
+  width: 66%;
+  height: 13px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #e0a66a, #92552f 48%, #5d321f);
+  box-shadow: 0 5px 5px rgba(34,74,77,.25), inset 0 2px rgba(255,233,197,.3);
+  will-change: transform;
+}
+
+#stageFx .v16-oar i {
+  top: -9px;
+  width: 59px;
+  height: 31px;
+  border-radius: 70% 24% 65% 28%;
+  background:
+    radial-gradient(ellipse at 40% 28%, rgba(255,226,184,.28), transparent 36%),
+    linear-gradient(90deg, #6a391f, #b56e39 58%, #754122);
+  box-shadow: inset 0 -4px rgba(73,38,21,.2), 0 4px 5px rgba(25,68,73,.2);
+}
+
+#stageFx .v16-oar-left {
+  left: -18%;
+  z-index: 23;
+  transform-origin: 91% 50%;
+  animation: v16OarLeft 900ms cubic-bezier(.36,.03,.22,1) 2 both;
+}
+#stageFx .v16-oar-left i { left: -13px; }
+#stageFx .v16-oar-right {
+  right: -18%;
+  transform-origin: 9% 50%;
+  animation: v16OarRight 900ms 430ms cubic-bezier(.36,.03,.22,1) 2 both;
+}
+#stageFx .v16-oar-right i { right: -13px; transform: scaleX(-1); }
+
+#stageFx .v16-bow-wake {
+  z-index: 17;
+  bottom: 24%;
+  width: 48%;
+  height: 22%;
+  border-top: 5px solid rgba(230,252,255,.72);
+  border-radius: 50%;
+  filter: blur(.25px) drop-shadow(0 2px 3px rgba(219,251,255,.45));
+  opacity: .78;
+}
+#stageFx .v16-bow-wake-left {
+  left: 4%;
+  transform: rotate(17deg);
+  animation: v16WakeLeft 780ms ease-out 2 both;
+}
+#stageFx .v16-bow-wake-right {
+  right: 4%;
+  transform: rotate(-17deg);
+  animation: v16WakeRight 780ms ease-out 2 both;
+}
+
+#stageFx .v16-paddle-water {
+  z-index: 19;
+  bottom: 30%;
+  width: 88px;
+  height: 35px;
+}
+#stageFx .v16-paddle-water-right { right: -1%; }
+#stageFx .v16-paddle-water i {
+  inset: 0;
+  border: 3px solid rgba(225,250,255,.68);
+  border-radius: 50%;
+  transform: perspective(100px) rotateX(68deg) scale(.18);
+  opacity: 0;
+  animation: v16PaddleRipple 900ms ease-out 2 both;
+}
+#stageFx .v16-paddle-water i:nth-child(2) { animation-delay: 140ms; }
+#stageFx .v16-paddle-water-right i { animation-delay: 430ms; }
+#stageFx .v16-paddle-water-right i:nth-child(2) { animation-delay: 570ms; }
+
+#stageFx .v16-splashes {
+  z-index: 31;
+  inset: 0;
+}
+
+#stageFx .v16-splash-drop {
+  bottom: 33%;
+  width: 7px;
+  height: 13px;
+  border-radius: 65% 40% 68% 42%;
+  background: linear-gradient(180deg, rgba(248,255,255,.95), rgba(136,226,242,.62));
+  box-shadow: 0 1px 4px rgba(228,252,255,.72);
+  opacity: 0;
+}
+#stageFx .v16-splash-right { right: 4%; animation: v16SplashRight 900ms var(--v16-splash-delay) ease-out 2 both; }
+#stageFx .splash-1 { margin-inline: 10px; width: 5px; height: 10px; }
+#stageFx .splash-2 { margin-inline: -9px; width: 6px; height: 11px; }
+#stageFx .splash-3 { margin-inline: 18px; width: 4px; height: 8px; }
+#stageFx .splash-4 { margin-inline: -16px; width: 5px; height: 9px; }
+#stageFx .splash-5 { margin-inline: 27px; width: 4px; height: 7px; }
+
+@keyframes v16BoatCameraBob {
+  0% { transform: translateY(2px) rotate(-.12deg); }
+  22% { transform: translateY(-3px) rotate(.16deg); }
+  48% { transform: translateY(2px) rotate(-.13deg); }
+  73% { transform: translateY(-4px) rotate(.11deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
+
+@keyframes v16BoatHorizon {
+  0% { transform: scale(1.22) translate3d(0, 6%, 0); filter: saturate(.98) brightness(1.03); }
+  44% { transform: scale(1.12) translate3d(-.8%, 2%, 0); }
+  72% { transform: scale(1.055) translate3d(.5%, -.5%, 0); }
+  100% { transform: scale(1.015) translate3d(0, -2%, 0); filter: saturate(1.1) brightness(1.04); }
+}
+
+@keyframes v16BoatHaze {
+  from { transform: translateX(-7%) scale(1.08); opacity: .3; }
+  54% { opacity: .68; }
+  to { transform: translateX(7%) scale(.88); opacity: .36; }
+}
+
+@keyframes v16BankLeft {
+  0% { transform: translate3d(13%, 8%, 0) scale(1.18); }
+  52% { transform: translate3d(2%, 2%, 0) scale(1.02); }
+  100% { transform: translate3d(-17%, -3%, 0) scale(.82); opacity: .84; }
+}
+@keyframes v16BankRight {
+  0% { transform: translate3d(-13%, 8%, 0) scale(1.18); }
+  52% { transform: translate3d(-2%, 2%, 0) scale(1.02); }
+  100% { transform: translate3d(17%, -3%, 0) scale(.82); opacity: .84; }
+}
+
+@keyframes v16WaterAdvance {
+  0% { transform: perspective(430px) rotateX(9deg) scale(1.02); background-position: center 0, center 0, center; }
+  55% { transform: perspective(430px) rotateX(6deg) scale(1.07); background-position: center 68px, center 44px, center; }
+  100% { transform: perspective(430px) rotateX(4deg) scale(1.12); background-position: center 144px, center 112px, center; }
+}
+
+@keyframes v16GlintPass {
+  0% { opacity: 0; transform: translateY(-36px) scale(.55); }
+  24% { opacity: .72; }
+  100% { opacity: 0; transform: translateY(98px) scale(1.55); }
+}
+
+@keyframes v16BoatBodyBob {
+  0%, 100% { transform: translateY(1px) rotate(0); }
+  28% { transform: translateY(-4px) rotate(-.35deg); }
+  64% { transform: translateY(3px) rotate(.28deg); }
+}
+
+@keyframes v16BoatRightStroke {
+  0%, 15% { transform: translate3d(0, 2px, 0) rotate(.12deg); }
+  31% { transform: translate3d(3px, -5px, 0) rotate(.72deg); }
+  49% { transform: translate3d(-5px, 4px, 0) rotate(-.92deg); }
+  66% { transform: translate3d(-1px, -2px, 0) rotate(-.28deg); }
+  100% { transform: translate3d(0, 1px, 0) rotate(.08deg); }
+}
+
+@keyframes v16RightStrokeSurge {
+  0%, 39% { transform: rotate(-12deg) translate3d(6px, -5px, 0); }
+  56% { transform: rotate(-5deg) translate3d(-9px, 8px, 0); }
+  75%, 100% { transform: rotate(-12deg) translate3d(0, 0, 0); }
+}
+
+@keyframes v16RightCatchRing {
+  0%, 10% { opacity: 0; transform: perspective(120px) rotateX(68deg) scale(.18); }
+  28% { opacity: .9; }
+  100% { opacity: 0; transform: perspective(120px) rotateX(68deg) scale(1.62); }
+}
+
+@keyframes v16RightCatchFoam {
+  0%, 12% { opacity: 0; transform: translate3d(13px, 5px, 0) scale(.45); }
+  31% { opacity: .9; }
+  100% { opacity: 0; transform: translate3d(-30px, -19px, 0) scale(1.28); }
+}
+
+@keyframes v16OarLeft {
+  0% { transform: rotate(14deg) translateY(-7px); }
+  23% { transform: rotate(-4deg) translateY(8px); }
+  48% { transform: rotate(-13deg) translateY(18px); }
+  72% { transform: rotate(7deg) translateY(3px); }
+  100% { transform: rotate(14deg) translateY(-7px); }
+}
+@keyframes v16OarRight {
+  0% { transform: rotate(-14deg) translateY(-7px); }
+  23% { transform: rotate(4deg) translateY(8px); }
+  48% { transform: rotate(13deg) translateY(18px); }
+  72% { transform: rotate(-7deg) translateY(3px); }
+  100% { transform: rotate(-14deg) translateY(-7px); }
+}
+
+@keyframes v16WakeLeft {
+  0% { transform: rotate(17deg) translate3d(28px, -18px, 0) scale(.38); opacity: 0; }
+  30% { opacity: .83; }
+  100% { transform: rotate(17deg) translate3d(-18px, 27px, 0) scale(1.32); opacity: .12; }
+}
+@keyframes v16WakeRight {
+  0% { transform: rotate(-17deg) translate3d(-28px, -18px, 0) scale(.38); opacity: 0; }
+  30% { opacity: .83; }
+  100% { transform: rotate(-17deg) translate3d(18px, 27px, 0) scale(1.32); opacity: .12; }
+}
+
+@keyframes v16PaddleRipple {
+  0%, 14% { transform: perspective(100px) rotateX(68deg) scale(.18); opacity: 0; }
+  34% { opacity: .78; }
+  100% { transform: perspective(100px) rotateX(68deg) scale(1.65); opacity: 0; }
+}
+
+@keyframes v16SplashRight {
+  0%, 16% { transform: translate3d(0, 4px, 0) scale(.4) rotate(10deg); opacity: 0; }
+  34% { opacity: .92; }
+  70% { transform: translate3d(-20px, -38px, 0) scale(1) rotate(-18deg); opacity: .72; }
+  100% { transform: translate3d(-35px, 8px, 0) scale(.55) rotate(-30deg); opacity: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   第三关：白鹤视角。左右翼尖固定在眼前，山谷先靠近再退开，三层云雾
+   以不同速度掠过，形成升高、俯冲、再抬升的完整飞行弧线。
+   -------------------------------------------------------------------------- */
+
+#stageFx .v16-pov-flight {
+  --v16-flight-time: 1800ms;
+  background: #8fd3ec;
+  perspective: 900px;
+}
+
+#stageFx .v16-flight-camera {
+  z-index: 2;
+  inset: -8%;
+  overflow: hidden;
+  transform-origin: 50% 63%;
+  animation: v16FlightPitch var(--v16-flight-time) cubic-bezier(.34, .02, .2, 1) both;
+}
+
+#stageFx .v16-flight-landscape {
+  background-image: url('scenes/lushan-crane-pov-v16.jpg');
+  background-position: center 57%;
+  filter: saturate(1.08) brightness(1.04);
+  animation: v16ValleyFlight var(--v16-flight-time) cubic-bezier(.34, .02, .2, 1) both;
+}
+
+#stageFx .v16-flight-sunwash {
+  z-index: 3;
+  inset: -7%;
+  background:
+    radial-gradient(circle at 10% 8%, rgba(255,255,246,.62), transparent 26%),
+    linear-gradient(126deg, rgba(246,255,255,.2), transparent 32%);
+  mix-blend-mode: screen;
+  animation: v16FlightLight var(--v16-flight-time) ease-in-out both;
+}
+
+#stageFx .v16-flight-cliff {
+  z-index: 6;
+  top: 20%;
+  width: 47%;
+  height: 68%;
+  background-image: url('scenes/lushan-crane-pov-v16.jpg');
+  background-size: 245% auto;
+  background-repeat: no-repeat;
+  filter: saturate(1.1) contrast(1.02) blur(.35px);
+  opacity: .88;
+  will-change: transform, opacity;
+}
+
+#stageFx .v16-flight-cliff-left {
+  left: -21%;
+  background-position: 3% 55%;
+  clip-path: polygon(0 0, 79% 0, 96% 16%, 76% 31%, 98% 48%, 73% 68%, 87% 84%, 59% 100%, 0 100%);
+  -webkit-mask-image: linear-gradient(90deg, #000 35%, rgba(0,0,0,.9) 68%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 35%, rgba(0,0,0,.9) 68%, transparent 100%);
+  animation: v16CliffLeft var(--v16-flight-time) cubic-bezier(.28, .01, .16, 1) both;
+}
+
+#stageFx .v16-flight-cliff-right {
+  right: -21%;
+  background-position: 98% 55%;
+  clip-path: polygon(100% 0, 21% 0, 4% 16%, 24% 31%, 2% 48%, 27% 68%, 13% 84%, 41% 100%, 100% 100%);
+  -webkit-mask-image: linear-gradient(270deg, #000 35%, rgba(0,0,0,.9) 68%, transparent 100%);
+  mask-image: linear-gradient(270deg, #000 35%, rgba(0,0,0,.9) 68%, transparent 100%);
+  animation: v16CliffRight var(--v16-flight-time) cubic-bezier(.28, .01, .16, 1) both;
+}
+
+#stageFx .v16-cloud-stream {
+  z-index: 8;
+  inset: 0;
+  overflow: hidden;
+}
+
+#stageFx .v16-flight-cloud {
+  left: 50%;
+  top: 42%;
+  width: 150px;
+  height: 58px;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 23% 63%, rgba(255,255,255,.78) 0 26%, transparent 28%),
+    radial-gradient(ellipse at 51% 42%, rgba(255,255,255,.86) 0 35%, transparent 37%),
+    radial-gradient(ellipse at 79% 62%, rgba(247,253,255,.72) 0 29%, transparent 31%);
+  filter: blur(6px);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+#stageFx .v16-cloud-stream-far { z-index: 5; }
+#stageFx .v16-cloud-stream-far .v16-flight-cloud {
+  width: 105px;
+  height: 41px;
+  filter: blur(7px);
+  animation: v16CloudFar var(--v16-flight-time) ease-in both;
+}
+#stageFx .v16-cloud-stream-far .cloud-0 { margin-left: -172px; animation-delay: 40ms; }
+#stageFx .v16-cloud-stream-far .cloud-1 { margin-left: 80px; top: 36%; animation-delay: 160ms; }
+#stageFx .v16-cloud-stream-far .cloud-2 { margin-left: -35px; top: 29%; animation-delay: 300ms; }
+
+#stageFx .v16-cloud-stream-mid { z-index: 9; }
+#stageFx .v16-cloud-stream-mid .v16-flight-cloud {
+  animation: v16CloudMid var(--v16-flight-time) cubic-bezier(.18,.05,.15,1) both;
+}
+#stageFx .v16-cloud-stream-mid .cloud-0 { margin-left: -220px; top: 43%; animation-delay: 30ms; }
+#stageFx .v16-cloud-stream-mid .cloud-1 { margin-left: 75px; top: 48%; animation-delay: 210ms; }
+#stageFx .v16-cloud-stream-mid .cloud-2 { margin-left: -86px; top: 27%; animation-delay: 390ms; }
+#stageFx .v16-cloud-stream-mid .cloud-3 { margin-left: 135px; top: 32%; animation-delay: 570ms; }
+
+#stageFx .v16-cloud-stream-near { z-index: 35; }
+#stageFx .v16-cloud-stream-near .v16-flight-cloud {
+  top: 31%;
+  width: 260px;
+  height: 102px;
+  filter: blur(11px);
+  animation: v16CloudNear 920ms cubic-bezier(.18,.02,.15,1) 2 both;
+}
+#stageFx .v16-cloud-stream-near .cloud-0 { margin-left: -310px; animation-delay: 50ms; }
+#stageFx .v16-cloud-stream-near .cloud-1 { margin-left: 64px; top: 44%; animation-delay: 190ms; }
+#stageFx .v16-cloud-stream-near .cloud-2 { margin-left: -120px; top: 18%; animation-delay: 380ms; }
+#stageFx .v16-cloud-stream-near .cloud-3 { margin-left: 145px; top: 25%; animation-delay: 540ms; }
+#stageFx .v16-cloud-stream-near .cloud-4 { margin-left: -250px; top: 55%; animation-delay: 690ms; }
+
+#stageFx .v16-flight-shadow {
+  z-index: 12;
+  left: 27%;
+  right: 27%;
+  bottom: 13%;
+  height: 15%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(32,78,88,.2), transparent 66%);
+  filter: blur(9px);
+  animation: v16BirdShadow var(--v16-flight-time) ease-in-out both;
+}
+
+#stageFx .v16-crane-foreground {
+  z-index: 28;
+  left: -8%;
+  right: -8%;
+  bottom: -4%;
+  height: min(62vw, 267px);
+  max-height: 267px;
+  overflow: visible;
+  transform-origin: 50% 96%;
+  will-change: transform;
+  animation: v16CraneBodyGlide 900ms ease-in-out 2 both;
+}
+
+/* The transparent source plate is split at its empty centre. Each half keeps
+   its painted feathers and rotates from the shoulder, so the wings articulate
+   independently instead of stretching the entire bird like one rubber sheet. */
+#stageFx .v16-crane-wing-slice {
+  bottom: 0;
+  width: 51%;
+  height: 100%;
+  background-image: url('objects/v16/lushan-crane-wings-v16.png');
+  background-repeat: no-repeat;
+  background-size: 196% auto;
+  filter: drop-shadow(0 7px 9px rgba(36,65,76,.2));
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+#stageFx .v16-crane-wing-slice-left {
+  left: 0;
+  background-position: left bottom;
+  transform-origin: 96% 94%;
+  animation: v16CraneSliceLeft 900ms cubic-bezier(.38,.02,.22,1) 2 both;
+}
+
+#stageFx .v16-crane-wing-slice-right {
+  right: 0;
+  background-position: right bottom;
+  transform-origin: 4% 94%;
+  animation: v16CraneSliceRight 900ms 34ms cubic-bezier(.38,.02,.22,1) 2 both;
+}
+
+#stageFx .v16-wing {
+  z-index: 28;
+  bottom: -3%;
+  width: 52%;
+  height: 35%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+#stageFx .v16-wing-left {
+  left: -3%;
+  transform-origin: 96% 92%;
+  animation: v16WingLeft 900ms cubic-bezier(.38,.02,.22,1) 2 both;
+}
+
+#stageFx .v16-wing-right {
+  right: -3%;
+  transform-origin: 4% 92%;
+  animation: v16WingRight 900ms cubic-bezier(.38,.02,.22,1) 2 both;
+}
+
+#stageFx .v16-wing-shoulder {
+  bottom: -8%;
+  right: -3%;
+  width: 58%;
+  height: 86%;
+  border-radius: 80% 18% 54% 35%;
+  background:
+    radial-gradient(ellipse at 65% 30%, rgba(255,255,255,.98), rgba(239,244,244,.97) 48%, rgba(166,181,187,.96) 82%),
+    linear-gradient(140deg, #fff, #c8d4d7);
+  box-shadow: inset -8px -8px 14px rgba(100,119,127,.17), 0 7px 9px rgba(33,67,71,.22);
+}
+
+#stageFx .v16-wing-right .v16-wing-shoulder {
+  left: -3%;
+  right: auto;
+  transform: scaleX(-1);
+}
+
+#stageFx .v16-feather {
+  right: 7%;
+  bottom: 19%;
+  width: 81%;
+  height: 24%;
+  border-radius: 92% 10% 78% 26%;
+  transform-origin: 96% 54%;
+  background:
+    radial-gradient(ellipse at 67% 30%, rgba(255,255,255,.9), transparent 47%),
+    linear-gradient(180deg, #ffffff, #edf3f3 53%, #aebdc2 84%, #71848c);
+  box-shadow: inset 0 -5px 7px rgba(85,103,112,.16), 0 4px 5px rgba(39,66,70,.12);
+  animation: v16FeatherFlex 900ms ease-in-out 2 both;
+}
+
+#stageFx .v16-wing-right .v16-feather {
+  left: 7%;
+  right: auto;
+  transform-origin: 4% 54%;
+}
+
+#stageFx .v16-wing-left .feather-0 { transform: rotate(-37deg) scale(.82); bottom: 12%; }
+#stageFx .v16-wing-left .feather-1 { transform: rotate(-27deg) scale(.9); bottom: 17%; }
+#stageFx .v16-wing-left .feather-2 { transform: rotate(-17deg) scale(.97); bottom: 23%; }
+#stageFx .v16-wing-left .feather-3 { transform: rotate(-8deg) scale(1); bottom: 30%; }
+#stageFx .v16-wing-left .feather-4 { transform: rotate(1deg) scale(.92); bottom: 37%; }
+#stageFx .v16-wing-left .feather-5 { transform: rotate(10deg) scale(.8); bottom: 44%; }
+
+#stageFx .v16-wing-right .feather-0 { transform: rotate(37deg) scale(.82); bottom: 12%; }
+#stageFx .v16-wing-right .feather-1 { transform: rotate(27deg) scale(.9); bottom: 17%; }
+#stageFx .v16-wing-right .feather-2 { transform: rotate(17deg) scale(.97); bottom: 23%; }
+#stageFx .v16-wing-right .feather-3 { transform: rotate(8deg) scale(1); bottom: 30%; }
+#stageFx .v16-wing-right .feather-4 { transform: rotate(-1deg) scale(.92); bottom: 37%; }
+#stageFx .v16-wing-right .feather-5 { transform: rotate(-10deg) scale(.8); bottom: 44%; }
+
+#stageFx .v16-flight-air {
+  z-index: 38;
+  top: -12%;
+  bottom: -12%;
+  width: 16%;
+  opacity: 0;
+  filter: blur(8px);
+  background:
+    radial-gradient(ellipse at 50% 15%, rgba(240,254,255,.48), transparent 18%),
+    radial-gradient(ellipse at 50% 48%, rgba(239,253,255,.35), transparent 20%),
+    radial-gradient(ellipse at 50% 81%, rgba(239,253,255,.3), transparent 17%);
+  animation: v16AirRush 900ms ease-in 2 both;
+}
+#stageFx .v16-flight-air-left { left: -3%; transform: rotate(-7deg); }
+#stageFx .v16-flight-air-right { right: -3%; transform: rotate(7deg); animation-delay: 170ms; }
+
+@keyframes v16FlightPitch {
+  0% { transform: perspective(900px) rotateX(1deg) rotateZ(-.08deg) translateY(0); }
+  28% { transform: perspective(900px) rotateX(4deg) rotateZ(.16deg) translateY(2%); }
+  58% { transform: perspective(900px) rotateX(8deg) rotateZ(-.18deg) translateY(5%); }
+  78% { transform: perspective(900px) rotateX(2deg) rotateZ(.1deg) translateY(1%); }
+  100% { transform: perspective(900px) rotateX(-3deg) rotateZ(0) translateY(-2%); }
+}
+
+@keyframes v16ValleyFlight {
+  0% { transform: scale(1.04) translate3d(0, -5%, 0); filter: saturate(1.02) brightness(1.06); }
+  30% { transform: scale(1.13) translate3d(-.6%, 1%, 0); }
+  58% { transform: scale(1.31) translate3d(.7%, 10%, 0); filter: saturate(1.16) brightness(1.01); }
+  79% { transform: scale(1.19) translate3d(-.3%, 3%, 0); }
+  100% { transform: scale(1.09) translate3d(0, -7%, 0); filter: saturate(1.09) brightness(1.07); }
+}
+
+@keyframes v16FlightLight {
+  0% { transform: translate3d(-5%, 0, 0); opacity: .42; }
+  56% { transform: translate3d(5%, 3%, 0); opacity: .72; }
+  100% { transform: translate3d(1%, -2%, 0); opacity: .54; }
+}
+
+@keyframes v16CliffLeft {
+  0% { transform: translate3d(18%, -18%, 0) scale(.55); opacity: .28; }
+  48% { transform: translate3d(5%, 4%, 0) scale(1.05); opacity: .92; }
+  100% { transform: translate3d(-38%, 43%, 0) scale(1.62); opacity: .08; }
+}
+@keyframes v16CliffRight {
+  0% { transform: translate3d(-18%, -18%, 0) scale(.55); opacity: .28; }
+  48% { transform: translate3d(-5%, 4%, 0) scale(1.05); opacity: .92; }
+  100% { transform: translate3d(38%, 43%, 0) scale(1.62); opacity: .08; }
+}
+
+@keyframes v16CloudFar {
+  0% { transform: translate3d(-50%, -45px, 0) scale(.45); opacity: 0; }
+  25% { opacity: .46; }
+  100% { transform: translate3d(-50%, 170px, 0) scale(1.35); opacity: .04; }
+}
+@keyframes v16CloudMid {
+  0% { transform: translate3d(-50%, -85px, 0) scale(.36); opacity: 0; }
+  20% { opacity: .66; }
+  78% { opacity: .42; }
+  100% { transform: translate3d(-50%, 270px, 0) scale(1.72); opacity: 0; }
+}
+@keyframes v16CloudNear {
+  0% { transform: translate3d(-50%, -130px, 90px) scale(.45); opacity: 0; }
+  18% { opacity: .68; }
+  62% { opacity: .52; }
+  100% { transform: translate3d(-50%, 390px, 90px) scale(1.9); opacity: 0; }
+}
+
+@keyframes v16WingLeft {
+  0% { transform: perspective(500px) rotateX(-5deg) rotateZ(8deg) translateY(9px); }
+  28% { transform: perspective(500px) rotateX(14deg) rotateZ(-7deg) translateY(-13px); }
+  55% { transform: perspective(500px) rotateX(-9deg) rotateZ(10deg) translateY(8px); }
+  78% { transform: perspective(500px) rotateX(9deg) rotateZ(-4deg) translateY(-8px); }
+  100% { transform: perspective(500px) rotateX(-4deg) rotateZ(6deg) translateY(3px); }
+}
+@keyframes v16WingRight {
+  0% { transform: perspective(500px) rotateX(-5deg) rotateZ(-8deg) translateY(9px); }
+  28% { transform: perspective(500px) rotateX(14deg) rotateZ(7deg) translateY(-13px); }
+  55% { transform: perspective(500px) rotateX(-9deg) rotateZ(-10deg) translateY(8px); }
+  78% { transform: perspective(500px) rotateX(9deg) rotateZ(4deg) translateY(-8px); }
+  100% { transform: perspective(500px) rotateX(-4deg) rotateZ(-6deg) translateY(3px); }
+}
+
+@keyframes v16CraneBodyGlide {
+  0%, 100% { transform: translate3d(0, 3px, 0) rotateZ(0); }
+  28% { transform: translate3d(0, -4px, 0) rotateZ(.12deg); }
+  56% { transform: translate3d(0, 4px, 0) rotateZ(-.1deg); }
+  79% { transform: translate3d(0, -2px, 0) rotateZ(.06deg); }
+}
+
+@keyframes v16CraneSliceLeft {
+  0% { transform: perspective(620px) rotateX(-3deg) rotateZ(4deg) translate3d(0, 5px, 0); }
+  27% { transform: perspective(620px) rotateX(16deg) rotateZ(-6deg) translate3d(1px, -12px, 0); }
+  54% { transform: perspective(620px) rotateX(-9deg) rotateZ(6deg) translate3d(-1px, 7px, 0); }
+  79% { transform: perspective(620px) rotateX(10deg) rotateZ(-3deg) translate3d(0, -7px, 0); }
+  100% { transform: perspective(620px) rotateX(-2deg) rotateZ(3deg) translate3d(0, 2px, 0); }
+}
+
+@keyframes v16CraneSliceRight {
+  0% { transform: perspective(620px) rotateX(-2deg) rotateZ(-3deg) translate3d(0, 4px, 0); }
+  27% { transform: perspective(620px) rotateX(14deg) rotateZ(5deg) translate3d(-1px, -11px, 0); }
+  54% { transform: perspective(620px) rotateX(-8deg) rotateZ(-6deg) translate3d(1px, 8px, 0); }
+  79% { transform: perspective(620px) rotateX(11deg) rotateZ(3deg) translate3d(0, -8px, 0); }
+  100% { transform: perspective(620px) rotateX(-3deg) rotateZ(-3deg) translate3d(0, 2px, 0); }
+}
+
+@keyframes v16FeatherFlex {
+  0%, 100% { filter: brightness(1); }
+  28% { filter: brightness(1.08); }
+  55% { filter: brightness(.94); }
+}
+
+@keyframes v16BirdShadow {
+  0% { transform: scale(.34) translateY(-70px); opacity: .04; }
+  58% { transform: scale(1.28) translateY(28px); opacity: .25; }
+  100% { transform: scale(.48) translateY(-55px); opacity: .06; }
+}
+
+@keyframes v16AirRush {
+  0% { transform: translateY(-34%) scaleY(.45); opacity: 0; }
+  32% { opacity: .42; }
+  100% { transform: translateY(42%) scaleY(1.24); opacity: 0; }
+}
+
+/* Compact-height tuning keeps the physical point-of-view objects visible above
+   the voice tray without changing the task controls. */
+@media (max-height: 740px) {
+  #stageFx .v16-pavilion { width: 172px; height: 178px; bottom: 1%; }
+  #stageFx .v16-rail { height: 84px; bottom: 3%; }
+  #stageFx .v16-rail i { height: 78px; }
+  #stageFx .v16-water-plane { top: 48%; }
+  #stageFx .v16-prow { height: 42%; }
+  #stageFx .v16-oar { bottom: 29%; }
+  #stageFx .v16-wing { height: 31%; }
+}
+
+@media (max-width: 370px) {
+  #stageFx .v16-pavilion { left: 69%; width: 178px; height: 184px; }
+  #stageFx .v16-rail { width: 50%; }
+  #stageFx .v16-oar { width: 70%; }
+  #stageFx .v16-wing { width: 55%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stageFx .v16-pov,
+  #stageFx .v16-pov div,
+  #stageFx .v16-pov i {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* v16.3: suspend hidden legacy layers while a full POV scene is active. */
+.v16-pov-active .world-ambience,
+.v16-pov-active .scene-state { display: none !important; }
+.v16-pov-host [style*='will-change'] { will-change: auto !important; }

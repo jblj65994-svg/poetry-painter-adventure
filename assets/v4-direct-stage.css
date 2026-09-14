@@ -1,0 +1,509 @@
+:root {
+  --v4-panel: calc(148px + env(safe-area-inset-bottom));
+  --v4-mint: #4fc7a6;
+  --v4-cream: rgba(255, 252, 242, .97);
+  --v4-ink: #263a34;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* One continuous scene: header / playable artwork / compact voice tray. */
+.level.active {
+  display: grid;
+  grid-template-rows: calc(env(safe-area-inset-top) + 62px) minmax(0, 1fr) var(--v4-panel);
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.scene-camera {
+  position: absolute;
+  z-index: 0;
+  inset: -3%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform: translate3d(0,0,0) scale(1.035);
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+  will-change: transform, filter;
+  pointer-events: none;
+}
+
+.level .level-top {
+  grid-row: 1;
+  height: auto;
+  padding: calc(env(safe-area-inset-top) + 10px) 14px 8px;
+}
+
+.level .guide {
+  grid-row: 2;
+  position: relative;
+  inset: auto;
+  min-height: 0;
+  overflow: hidden;
+  isolation: isolate;
+  transition: filter .35s ease, transform .45s cubic-bezier(.2,.8,.25,1);
+}
+
+.level .activity {
+  grid-row: 3;
+  position: relative;
+  inset: auto;
+  height: var(--v4-panel);
+  min-height: 0;
+  max-height: none;
+  overflow: hidden;
+  padding: 10px 14px calc(env(safe-area-inset-bottom) + 10px);
+  border-radius: 25px 25px 0 0;
+  background: var(--v4-cream);
+  box-shadow: 0 -9px 28px rgba(31, 53, 44, .18), inset 0 1px rgba(255,255,255,.95);
+  transition: none;
+}
+
+.level.is-performing .guide { inset: auto; transform: scale(1.01); }
+.level.is-performing .activity { transform: none; pointer-events: auto; }
+.level.is-performing #taskArea { opacity: .2; transform: scale(.985); pointer-events: none; }
+
+.activity-head { min-height: 31px; }
+.activity-head h2 { margin: 0; font-size: 19px; line-height: 1.2; color: var(--v4-ink); }
+.activity-head .speak { width: 34px; height: 34px; font-size: 15px; }
+.instruction { display: none; }
+.narration-status {
+  min-height: 30px;
+  margin: 4px 0 3px;
+  padding: 4px 9px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+.narration-status .ear { font-size: 17px; }
+.feedback {
+  min-height: 23px;
+  max-height: 29px;
+  overflow: hidden;
+  padding: 3px 4px 0;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.continue { height: 47px; min-height: 47px; border-radius: 16px; font-size: 17px; }
+.phase-done .narration-status { display: none; }
+.phase-done .feedback { min-height: 25px; max-height: 30px; padding-top: 1px; }
+.phase-done .activity-head { min-height: 27px; }
+.phase-done .activity-head h2 { font-size: 18px; }
+
+/* Characters stay completely inside the scene and never lose their feet. */
+.level .guide #guideImage {
+  left: 6px;
+  right: auto;
+  bottom: 10px;
+  width: auto;
+  max-width: 39%;
+  height: min(28vh, 215px);
+  max-height: 50%;
+  object-fit: contain;
+  object-position: left bottom;
+  transform-origin: center bottom;
+  filter: drop-shadow(0 10px 10px rgba(27, 48, 39, .27));
+  transition: opacity .25s ease, transform .45s cubic-bezier(.2,.9,.25,1);
+}
+.level[data-world="xuemei"] .guide #guideImage { bottom: 24%; max-width: 31%; height: min(23vh, 178px); }
+.level[data-world="flowers"] .guide #guideImage { bottom: 8px; max-width: 34%; height: min(25vh, 190px); }
+.level[data-world="study"] .guide #guideImage { bottom: 20%; max-width: 31%; height: min(23vh, 175px); }
+.level[data-task="lushan-1"] .guide #guideImage { opacity: 0; transform: translateX(-18px) scale(.9); }
+
+.guide:before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  left: 6%;
+  bottom: 7px;
+  width: 105px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(29,58,46,.28), rgba(29,58,46,0) 70%);
+  pointer-events: none;
+}
+.level[data-world="xuemei"] .guide:before { bottom: 23%; width: 90px; }
+.level[data-world="flowers"] .guide:before { width: 92px; }
+.level[data-world="study"] .guide:before { bottom: 19%; width: 92px; }
+.level[data-task="lushan-1"] .guide:before { opacity: 0; }
+
+.guide-bubble {
+  z-index: 18;
+  top: 10px;
+  right: 12px;
+  width: min(59%, 250px);
+  padding: 10px 12px;
+  border: 2px solid rgba(255,255,255,.88);
+  border-radius: 18px 18px 18px 7px;
+  background: rgba(255,255,255,.91);
+  box-shadow: 0 8px 24px rgba(34, 55, 47, .16);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.stage-feedback {
+  z-index: 17;
+  top: 74px;
+  right: 12px;
+  width: auto;
+  max-width: min(62%, 250px);
+  min-height: 37px;
+  padding: 6px 9px;
+  border: 2px solid rgba(255,255,255,.82);
+  border-radius: 14px;
+  font-size: 12px;
+  opacity: 0;
+  transform: translateY(-5px) scale(.97);
+  transition: opacity .2s ease, transform .25s ease;
+}
+.stage-feedback b { font-size: 20px; }
+.stage-feedback #visualIcon .stage-art { width: 28px; height: 28px; }
+.phase-performing .stage-feedback,
+.phase-done .stage-feedback { opacity: 1; transform: none; }
+
+/* The task layer sits over the scene; only actual controls take pointer input. */
+.guide .task-wrap {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  pointer-events: none;
+}
+
+#taskArea.stage-task {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: 1;
+  filter: none;
+  pointer-events: none;
+  transition: opacity .25s ease, transform .35s ease;
+  user-select: none;
+  touch-action: none;
+}
+
+#taskArea.stage-task button { pointer-events: auto; -webkit-tap-highlight-color: transparent; }
+.phase-asking #taskArea.stage-task { opacity: .38; filter: saturate(.72); }
+.phase-done #taskArea.stage-task { opacity: .22; pointer-events: none; }
+
+.guide .input-shield {
+  z-index: 28;
+  inset: 0;
+  pointer-events: auto;
+  border-radius: 0;
+  background: linear-gradient(180deg, rgba(250,255,252,.08), rgba(255,250,224,.28));
+  color: #8d6127;
+  backdrop-filter: blur(.35px);
+}
+.guide .input-shield.needs-tap {
+  background: rgba(255, 248, 214, .78);
+  backdrop-filter: blur(2px);
+}
+
+.stage-art {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  pointer-events: none;
+}
+.stage-art svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 5px 5px rgba(31,51,43,.19)); }
+
+/* Refine the legacy celebration shapes so they sit on the painted objects. */
+.stage-fx .mountain-shape {
+  left: 54% !important;
+  bottom: 44% !important;
+  width: 132px;
+  height: 108px;
+  opacity: .64;
+  background: linear-gradient(145deg, rgba(207,245,230,.9), rgba(54,145,116,.78) 72%);
+}
+.stage-fx .mountain-shape:after { left: 43px; top: 8px; width: 47px; height: 35px; }
+.stage-fx .waterfall { left: 73% !important; bottom: 32% !important; height: 120px; opacity: .86; }
+.stage-fx .soil {
+  width: 158px;
+  height: 48px;
+  border: 2px solid rgba(255,239,203,.42);
+  border-radius: 54% 54% 26% 26%;
+  background:
+    radial-gradient(circle at 22% 38%, #ddb077 0 3px, transparent 4px),
+    radial-gradient(circle at 68% 58%, #6d432b 0 3px, transparent 4px),
+    radial-gradient(circle at 48% 24%, #bd7e4c 0 4px, transparent 5px),
+    linear-gradient(#a66d41,#684229);
+  box-shadow: inset 0 8px 0 rgba(215,156,92,.35), 0 8px 15px rgba(62,42,29,.16);
+}
+.stage-fx .book {
+  left: 34% !important;
+  top: 57% !important;
+  width: 116px;
+  height: 78px;
+  border: 3px solid rgba(255,255,255,.72);
+  border-radius: 12px;
+}
+.stage-fx .book:after { right: 19px; top: 20px; font-size: 23px; }
+.stage-fx .pot {
+  left: 51% !important;
+  bottom: 7% !important;
+  width: 92px;
+  height: 70px;
+  filter: drop-shadow(0 8px 8px rgba(54,42,30,.2));
+}
+
+/* Tap the illustrated mountain, snow or blossom itself. */
+.scene-hotspot {
+  position: absolute;
+  min-height: 0;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 3px solid rgba(255,255,255,.82);
+  border-radius: 42% 48% 44% 46%;
+  background: rgba(255,255,255,.1);
+  box-shadow: 0 0 0 3px rgba(79,199,166,.36), inset 0 0 24px rgba(255,255,255,.2);
+  overflow: visible;
+  touch-action: manipulation;
+}
+.scene-hotspot .stage-art {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 53px;
+  height: 53px;
+  transform: translate(-50%, -50%);
+  padding: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.82);
+  box-shadow: 0 6px 17px rgba(28,55,45,.18);
+}
+.phase-waiting .scene-hotspot { animation: v4HotspotBreathe 1.8s ease-in-out infinite; }
+.scene-hotspot.hint-target { border-color: #ffe16c; box-shadow: 0 0 0 6px rgba(255,225,108,.38), 0 0 28px rgba(255,225,108,.65); }
+.scene-hotspot.selected { animation: v4Select .7s cubic-bezier(.2,1.45,.35,1) both; }
+.scene-hotspot.wrong { animation: v4Wrong .38s ease; }
+
+.task-lushan-2 .kind-ridge { left: 30%; top: 52%; width: 42%; height: 27%; }
+.task-lushan-2 .kind-peak { left: 72%; top: 31%; width: 31%; height: 34%; }
+.task-xuemei-0 .kind-snow,
+.task-xuemei-1 .kind-snow { left: 30%; top: 78%; width: 40%; height: 25%; }
+.task-xuemei-0 .kind-plum,
+.task-xuemei-1 .kind-plum { left: 76%; top: 73%; width: 34%; height: 28%; }
+
+@keyframes v4HotspotBreathe {
+  50% { box-shadow: 0 0 0 7px rgba(79,199,166,.17), inset 0 0 28px rgba(255,255,255,.28); }
+}
+@keyframes v4Select { 45% { transform: translate(-50%,-50%) scale(1.16); filter: brightness(1.15); } to { opacity: .3; } }
+@keyframes v4Wrong { 25% { transform: translate(calc(-50% - 7px),-50%); } 65% { transform: translate(calc(-50% + 7px),-50%); } }
+
+/* Swiping happens on the scene; a soft trail gives the child the gesture. */
+.direct-swipe .gesture-card {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  touch-action: none;
+  cursor: grab;
+}
+.direct-swipe .gesture-card:active { cursor: grabbing; }
+.swipe-focus {
+  position: absolute;
+  left: 69%;
+  top: 41%;
+  transform: translate(-50%,-50%);
+  padding: 10px;
+  border: 2px solid rgba(255,255,255,.82);
+  border-radius: 24px;
+  background: rgba(255,255,255,.72);
+  box-shadow: 0 8px 22px rgba(31,53,44,.2), 0 0 0 7px rgba(79,199,166,.13);
+}
+.swipe-focus .stage-art { width: 72px; height: 72px; }
+.swipe-trail {
+  position: absolute;
+  left: 27%;
+  top: 59%;
+  width: 46%;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  filter: drop-shadow(0 3px 5px rgba(25,56,46,.24));
+}
+.swipe-trail:before,
+.swipe-trail:after { content: ''; width: 14px; height: 14px; border: solid #fff; border-width: 4px 4px 0 0; }
+.swipe-trail:before { transform: rotate(-135deg); }
+.swipe-trail:after { transform: rotate(45deg); }
+.swipe-trail i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.93); animation: v4SwipeDot 1.35s ease-in-out infinite; }
+.swipe-trail i:nth-child(2) { animation-delay: .13s; }
+.swipe-trail i:nth-child(3) { animation-delay: .26s; }
+.task-flowers-1 .swipe-focus { left: 72%; top: 30%; }
+.task-flowers-1 .swipe-trail { left: 38%; top: 55%; width: 48%; }
+.task-study-0 .gesture-card { inset: 34% 4% 2%; border-radius: 30px; }
+.task-study-0 .swipe-focus { left: 52%; top: 64%; }
+.task-study-0 .swipe-trail { left: 23%; top: 80%; width: 57%; }
+.gesture-card.activated .swipe-focus { animation: v4SwipeActivate .8s cubic-bezier(.2,1.3,.3,1) both; }
+@keyframes v4SwipeDot { 50% { transform: translateX(12px) scale(.72); opacity: .42; } }
+@keyframes v4SwipeActivate { 45% { transform: translate(-50%,-50%) rotate(10deg) scale(1.12); } to { opacity: .2; } }
+
+/* Dragging uses clean vector tokens and generous invisible hit zones. */
+.direct-drag .drag-token {
+  position: absolute;
+  z-index: 7;
+  left: 12%;
+  top: 40%;
+  width: 74px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  padding: 5px;
+  border: 2px solid rgba(255,255,255,.92);
+  border-radius: 22px;
+  background: rgba(255,255,255,.82);
+  box-shadow: 0 8px 20px rgba(31,51,43,.22), 0 0 0 6px rgba(255,224,102,.16);
+  font-size: 0;
+  cursor: grab;
+  touch-action: none;
+  transition: opacity .3s ease, transform .25s ease, filter .25s ease;
+}
+.direct-drag .drag-token .stage-art { width: 54px; height: 54px; }
+.direct-drag .drag-token.dragging { z-index: 15; animation: none !important; transition: none; cursor: grabbing; }
+.direct-drag .drag-token.done { opacity: 0; transform: scale(.45); pointer-events: none; }
+.direct-drag .drag-token.locked { opacity: .28; filter: grayscale(.55); pointer-events: none; }
+.phase-waiting .direct-drag .drag-token:not(.locked):not(.done) { animation: v4TokenFloat 1.7s ease-in-out infinite; }
+
+.direct-drag .drop-target {
+  position: absolute;
+  z-index: 5;
+  left: 72%;
+  top: 68%;
+  right: auto;
+  width: 27%;
+  min-height: 105px;
+  transform: translate(-50%,-50%);
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  border: 3px dashed rgba(255,255,255,.92);
+  border-radius: 28px;
+  background: rgba(79,199,166,.12);
+  box-shadow: 0 0 0 5px rgba(79,199,166,.24), inset 0 0 30px rgba(255,255,255,.2);
+  font-size: 0;
+}
+.direct-drag .drop-target .stage-art { width: 52px; height: 52px; opacity: .92; }
+.direct-drag .drop-target.done { border-style: solid; background: rgba(226,255,243,.36); animation: v4TargetDone .65s cubic-bezier(.2,1.4,.3,1); }
+.direct-drag .drop-target.hint-target { box-shadow: 0 0 0 8px rgba(255,223,92,.4), 0 0 30px rgba(255,223,92,.7); }
+
+.task-lushan-1 .kind-xiaohei {
+  left: 6%;
+  top: 47%;
+  width: 112px;
+  height: 174px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.task-lushan-1 .kind-xiaohei img { width: 100%; height: 100%; object-fit: contain; object-position: center bottom; pointer-events: none; }
+.direct-drag.task-lushan-1 .drag-token.kind-xiaohei {
+  width: 112px;
+  height: 174px;
+}
+.phase-waiting .direct-drag.task-lushan-1 .drag-token.kind-xiaohei:not(.done) {
+  animation: v4CharacterIdle 1.65s ease-in-out infinite;
+}
+.task-lushan-1 .target-far { left: 76%; top: 68%; width: 29%; min-height: 116px; }
+
+.task-xuemei-2 .token-0 { left: 10%; top: 43%; }
+.task-xuemei-2 .token-1 { left: 10%; top: 62%; }
+.task-xuemei-2 .target-snow { left: 33%; top: 78%; width: 35%; min-height: 92px; }
+.task-xuemei-2 .target-plum { left: 76%; top: 73%; width: 31%; min-height: 96px; }
+
+.task-flowers-0 .token-0 { left: 13%; top: 20%; transform: rotate(-12deg); }
+.task-flowers-0 .token-1 { left: 36%; top: 31%; transform: rotate(10deg); }
+.task-flowers-0 .token-2 { left: 59%; top: 20%; transform: rotate(-6deg); }
+.task-flowers-0 .target-soil { left: 54%; top: 73%; width: 54%; min-height: 120px; border-radius: 50%; }
+
+.task-study-1 .kind-seed { left: 79%; top: 67%; }
+.task-study-1 .target-pot { left: 57%; top: 61%; width: 30%; min-height: 116px; }
+
+@keyframes v4TokenFloat { 50% { transform: translateY(-7px) rotate(3deg); box-shadow: 0 13px 22px rgba(31,51,43,.2), 0 0 0 9px rgba(255,224,102,.12); } }
+@keyframes v4CharacterIdle { 50% { transform: translateY(-5px) rotate(-1deg); } }
+@keyframes v4TargetDone { 45% { transform: translate(-50%,-50%) scale(1.12); filter: brightness(1.18); } }
+
+/* Sequential taps are separate objects in the illustration. */
+.direct-tap .tap-target {
+  position: absolute;
+  z-index: 7;
+  width: 92px;
+  min-height: 92px;
+  padding: 10px;
+  transform: translate(-50%,-50%);
+  border: 3px solid rgba(255,255,255,.86);
+  border-radius: 50%;
+  background: rgba(255,255,255,.66);
+  box-shadow: 0 0 0 5px rgba(79,199,166,.23), 0 8px 22px rgba(32,52,44,.18);
+  touch-action: manipulation;
+}
+.direct-tap .tap-target .stage-art { width: 63px; height: 63px; }
+.direct-tap .tap-target.locked { opacity: .25; filter: grayscale(.45); pointer-events: none; }
+.direct-tap .tap-target.done { opacity: .25; transform: translate(-50%,-50%) scale(.72); pointer-events: none; }
+.phase-waiting .direct-tap .tap-target:not(.locked):not(.done) { animation: v4TapPulse 1.25s ease-in-out infinite; }
+.direct-tap .tap-target.hint-target { border-color: #ffe26b; box-shadow: 0 0 0 9px rgba(255,226,107,.38), 0 0 29px rgba(255,226,107,.65); }
+.direct-tap .tap-target.next-beat { animation: v4NextBeat .72s cubic-bezier(.2,1.4,.3,1) both; }
+
+.task-flowers-2 .target-soil { left: 34%; top: 75%; }
+.task-flowers-2 .target-sprout { left: 56%; top: 68%; }
+.task-flowers-2 .target-bloom { left: 76%; top: 61%; }
+.task-study-2 .target-water { left: 82%; top: 66%; }
+.task-study-2 .target-moon { left: 77%; top: 19%; }
+
+@keyframes v4TapPulse { 50% { transform: translate(-50%,-50%) scale(1.07); box-shadow: 0 0 0 11px rgba(79,199,166,.1), 0 10px 25px rgba(32,52,44,.2); } }
+@keyframes v4NextBeat { from { transform: translate(-50%,-50%) scale(.35); opacity: .2; } }
+
+.coach-overlay { z-index: 42; }
+.coach-hand { width: 46px; height: 52px; font-size: 0; }
+.coach-hand svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 6px 6px rgba(49,44,34,.24)); }
+.ready-cue { z-index: 31; top: 48%; }
+
+@media (max-height: 740px) {
+  :root { --v4-panel: calc(140px + env(safe-area-inset-bottom)); }
+  .level .guide #guideImage { height: min(25vh, 172px); max-height: 46%; bottom: 7px; }
+  .level[data-world="xuemei"] .guide #guideImage,
+  .level[data-world="study"] .guide #guideImage { bottom: 22%; height: min(20vh, 145px); }
+  .guide-bubble { top: 7px; padding: 8px 10px; font-size: 12px; }
+  .stage-feedback { top: 64px; }
+  .activity-head h2 { font-size: 18px; }
+  .narration-status { margin-top: 2px; }
+  .direct-tap .tap-target { width: 78px; min-height: 78px; }
+  .direct-tap .tap-target .stage-art { width: 52px; height: 52px; }
+  .task-lushan-1 .kind-xiaohei { width: 96px; height: 148px; }
+}
+
+@media (max-width: 380px) {
+  .scene-hotspot .stage-art { width: 47px; height: 47px; padding: 7px; }
+  .direct-drag .drag-token { width: 70px; height: 70px; }
+  .direct-drag .drag-token .stage-art { width: 48px; height: 48px; }
+  .direct-drag .drop-target .stage-art { width: 46px; height: 46px; }
+  .swipe-focus .stage-art { width: 62px; height: 62px; }
+  .direct-drag.task-lushan-1 .drag-token.kind-xiaohei { width: 96px; height: 148px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phase-waiting .scene-hotspot,
+  .phase-waiting .direct-drag .drag-token,
+  .phase-waiting .direct-tap .tap-target,
+  .swipe-trail i { animation-duration: 2.4s; }
+}

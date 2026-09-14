@@ -1,0 +1,857 @@
+/* V16: causal farm and study actions. This file is loaded after v15-perfect-play.css. */
+
+/* Keep the study pot visible before the drag starts and align it with the
+   cinematic landing point. The seed stays in the foreground while moving. */
+#levelScreen[data-task="study-1"] #taskArea.stage-task {
+  overflow: hidden;
+}
+
+#levelScreen[data-task="study-1"].phase-asking #taskArea.stage-task {
+  opacity: 1;
+  filter: none;
+}
+
+.task-flowers-1 .target-compost {
+  left: auto;
+  right: 3%;
+  top: auto;
+  bottom: 23%;
+  width: clamp(142px, 38vw, 170px);
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 429 / 437;
+  transform: none;
+}
+
+.task-flowers-2 .target-water {
+  left: auto;
+  right: 3%;
+  top: auto;
+  bottom: 21%;
+  width: clamp(156px, 43vw, 188px);
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 424 / 406;
+  transform: none;
+}
+
+.task-study-2 .target-water {
+  left: auto;
+  right: 1%;
+  top: auto;
+  bottom: 33%;
+  width: clamp(156px, 43vw, 188px);
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 424 / 406;
+  transform: none;
+}
+
+.task-study-1 .kind-seed {
+  left: 24%;
+  right: auto;
+  top: auto;
+  bottom: 51%;
+  z-index: 23;
+  width: clamp(92px, 25vw, 112px);
+  height: clamp(92px, 25vw, 112px);
+}
+
+.task-study-1 .target-pot {
+  left: 64%;
+  right: auto;
+  top: auto;
+  bottom: 4%;
+  z-index: 11;
+  width: clamp(168px, 46vw, 198px);
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 395 / 403;
+  transform: translateX(-50%);
+  filter: brightness(1.04) saturate(1.04);
+}
+
+/* V5 intentionally hid this placeholder. V16 turns it into the real visual
+   drop target so a child can see where the seed should go before dragging. */
+.task-study-1 .target-pot .stage-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+}
+
+.task-study-1 .target-pot::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 13%;
+  right: 13%;
+  bottom: 1%;
+  height: 15%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(66, 38, 22, .32), rgba(66, 38, 22, 0) 72%);
+  pointer-events: none;
+}
+
+.task-study-1 .kind-seed.dragging {
+  z-index: 30;
+  filter: brightness(1.09) saturate(1.08) drop-shadow(0 12px 10px rgba(48, 28, 17, .25));
+}
+
+.task-study-1 .target-pot.hint-target .stage-art {
+  animation: v16PotInvite .82s ease-in-out 2 !important;
+}
+
+.task-study-1 .target-pot.done .stage-art {
+  opacity: 0;
+}
+
+/* The old state paints a loose seed without its pot during study step 1.
+   The active target and V16 effect own this object now. */
+.state-study.state-step-1 .v15-study-seed {
+  visibility: hidden;
+}
+
+.v16-cinematic-fx,
+.v16-action {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.v16-cinematic-fx {
+  z-index: 15;
+}
+
+.stage-fx .v16-action,
+.stage-fx .v16-action span,
+.stage-fx .v16-action i,
+.stage-fx .v16-action b {
+  filter: none;
+}
+
+.level .guide img.v16-object {
+  position: absolute;
+  display: block;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  object-position: center;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 10px rgba(43, 38, 27, .24));
+}
+
+/* Shared pot stack: shadow -> pot -> dark planting hole -> foreground soil lip. */
+.stage-fx .v16-pot-assembly {
+  position: absolute;
+  z-index: 3;
+  left: 64%;
+  bottom: 4%;
+  width: clamp(168px, 46vw, 198px);
+  aspect-ratio: 395 / 403;
+  transform: translateX(-50%);
+  animation: v16PotSettle 1.24s cubic-bezier(.2, .82, .25, 1) both;
+}
+
+/* The cover beat immediately follows the seed beat. Keep the same pot frozen
+   in place while only the soil moves, avoiding a second entrance bounce. */
+.stage-fx .v16-cover-pot {
+  animation: none;
+}
+
+.level .guide .v16-pot-image {
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* The same pot is repeated as a clipped foreground mask. It lets the seed
+   enter the opening while the ceramic front correctly hides its lower edge. */
+.level .guide .v16-pot-occluder {
+  z-index: 6;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: inset(29% 0 0 0);
+  filter: none;
+}
+
+.stage-fx .v16-pot-shadow {
+  position: absolute;
+  z-index: 0;
+  left: 10%;
+  right: 10%;
+  bottom: -1%;
+  height: 14%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(56, 34, 22, .34), rgba(56, 34, 22, 0) 72%);
+}
+
+.stage-fx .v16-pot-depth {
+  position: absolute;
+  z-index: 3;
+  left: 34.5%;
+  top: 16%;
+  width: 31%;
+  height: 13%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 48%, rgba(25, 13, 8, .88), rgba(53, 30, 18, .66) 48%, rgba(81, 49, 30, 0) 73%);
+  box-shadow: inset 0 5px 7px rgba(19, 10, 6, .42);
+}
+
+.stage-fx .v16-pot-front-soil {
+  position: absolute;
+  z-index: 7;
+  left: 25%;
+  top: 18.5%;
+  width: 50%;
+  height: 15%;
+  overflow: hidden;
+  border-radius: 50%;
+  clip-path: inset(48% 0 0 0);
+  background:
+    radial-gradient(circle at 27% 61%, #a17a5c 0 3%, transparent 4%),
+    radial-gradient(circle at 70% 68%, #8e684d 0 3.5%, transparent 4.5%),
+    radial-gradient(circle at 53% 52%, #b08a69 0 2.5%, transparent 3.5%),
+    linear-gradient(180deg, #6c482f, #4c2f1e);
+  opacity: .94;
+}
+
+/* Fertilizer: the bag rises, holds a pouring angle, and the stream begins at
+   its mouth. The soil responds only after the first grains arrive. */
+.level .guide .v16-farm-soil {
+  z-index: 2;
+  left: 53%;
+  bottom: 3%;
+  width: clamp(218px, 58vw, 250px);
+  height: auto;
+  transform: translateX(-50%);
+}
+
+.stage-fx .v16-farm-ground-shadow {
+  position: absolute;
+  z-index: 1;
+  left: 25%;
+  bottom: 2%;
+  width: 57%;
+  height: 16%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(61, 37, 23, .28), rgba(61, 37, 23, 0) 72%);
+}
+
+.level .guide .v16-fertilizer-bag {
+  z-index: 8;
+  left: auto;
+  right: 3%;
+  bottom: 23%;
+  width: clamp(142px, 38vw, 170px);
+  height: auto;
+  transform-origin: 52% 78%;
+  animation: v16BagPour 1.62s cubic-bezier(.22, .72, .25, 1) both;
+}
+
+.stage-fx .v16-fertilizer-stream {
+  position: absolute;
+  z-index: 9;
+  left: 59%;
+  top: 54%;
+  width: 20px;
+  height: 1px;
+}
+
+.stage-fx .v16-fertilizer-cascade {
+  position: absolute;
+  z-index: 6;
+  left: calc(59% - 10px);
+  top: 54%;
+  width: 35px;
+  height: 120px;
+  clip-path: polygon(35% 0, 66% 0, 100% 100%, 0 100%);
+  background:
+    radial-gradient(circle at 22% 8%, #c99d68 0 3px, transparent 3.6px) 0 0 / 18px 23px,
+    radial-gradient(circle at 72% 34%, #765036 0 3.5px, transparent 4.1px) 2px 4px / 24px 29px,
+    radial-gradient(circle at 48% 74%, #a8794d 0 2.8px, transparent 3.4px) -3px 8px / 21px 26px;
+  opacity: 0;
+  transform: rotate(28deg) scaleY(.2);
+  transform-origin: 50% 0;
+  animation: v16FertilizerCascade 1.02s ease-in .43s both;
+}
+
+.stage-fx .v16-feed-grain,
+.stage-fx .v16-cover-grain {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--v16-size);
+  height: calc(var(--v16-size) * .72);
+  border-radius: 48% 55% 42% 58%;
+  border: 1px solid rgba(86, 54, 31, .36);
+  background: linear-gradient(145deg, #d3aa77, #865d3b 60%, #4b301e);
+  box-shadow: 0 1px 2px rgba(43, 26, 15, .34), inset 1px 1px rgba(255,230,185,.28);
+  opacity: 0;
+  animation: v16FeedFall .7s cubic-bezier(.32, .06, .72, .38) var(--v16-delay) both;
+}
+
+.stage-fx .v16-feed-grain {
+  width: calc(var(--v16-size) * 1.32);
+  height: calc(var(--v16-size) * .96);
+}
+
+.stage-fx .v16-fed-patch {
+  position: absolute;
+  z-index: 3;
+  left: 42%;
+  bottom: 10%;
+  width: 24%;
+  height: 12%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 47%, rgba(122, 85, 48, .9) 0 4%, transparent 5%),
+    radial-gradient(circle at 65% 35%, rgba(98, 65, 37, .86) 0 4%, transparent 5%),
+    radial-gradient(ellipse, rgba(50, 30, 18, .7), rgba(72, 44, 26, .28) 64%, transparent 72%);
+  opacity: 0;
+  transform: scale(.28, .16);
+  animation: v16SoilDarken .78s ease-out .72s both;
+}
+
+.stage-fx .v16-soil-rebound {
+  position: absolute;
+  z-index: 5;
+  left: 53%;
+  bottom: 13%;
+  width: 37%;
+  height: 10%;
+  transform: translateX(-50%);
+}
+
+.stage-fx .v16-soil-rebound i {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 12px;
+  height: 9px;
+  border: 0;
+  border-radius: 56% 44% 52% 48%;
+  background: radial-gradient(circle at 34% 27%, #c19463 0 14%, #805331 38%, #4b2e1c 100%);
+  box-shadow: 0 2px 2px rgba(50, 29, 17, .28);
+  opacity: 0;
+  animation: v16SoilClod .62s ease-out calc(.82s + var(--v16-clod-delay, 0s)) both;
+}
+
+.stage-fx .v16-soil-rebound i:nth-child(1) { left: 40%; --v16-clod-x: -11px; --v16-clod-rotate: -38deg; }
+.stage-fx .v16-soil-rebound i:nth-child(2) { left: 52%; --v16-clod-delay: .11s; --v16-clod-x: 4px; --v16-clod-rotate: 31deg; width: 9px; height: 7px; }
+.stage-fx .v16-soil-rebound i:nth-child(3) { left: 63%; --v16-clod-delay: .2s; --v16-clod-x: 13px; --v16-clod-rotate: 52deg; width: 10px; height: 8px; }
+
+.level .guide .v16-soil-fed {
+  animation: v16SoilReceive 1.55s ease .38s both;
+}
+
+/* Seed and cover live inside the pot wrapper, so a short or tall phone cannot
+   separate them from the opening. */
+.level .guide .v16-seed-into-pot {
+  z-index: 5;
+  left: 50%;
+  top: 17%;
+  right: auto;
+  bottom: auto;
+  width: 38%;
+  height: auto;
+  transform-origin: 50% 70%;
+  animation: v16SeedIntoPot 1.22s cubic-bezier(.28, .04, .54, 1) both;
+}
+
+.stage-fx .v16-seed-landing-shadow {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 20.5%;
+  bottom: auto;
+  width: 34%;
+  height: 4%;
+  border-radius: 50%;
+  background: rgba(30, 16, 9, .48);
+  transform: translateX(-50%) scale(.2);
+  opacity: 0;
+  animation: v16SeedShadow 1.05s ease .12s both;
+}
+
+.level .guide .v16-seed-in-hole {
+  z-index: 4;
+  left: 50%;
+  top: 16.5%;
+  right: auto;
+  bottom: auto;
+  width: 18%;
+  height: auto;
+  transform: translateX(-50%) scale(.68) rotate(12deg);
+  animation: v16SeedDisappear .7s ease .18s both;
+}
+
+/* A recognizable garden trowel carries soil over the opening, tips, releases
+   the crumbs and leaves. This reads as one physical action without guide rings. */
+.stage-fx .v16-cover-trowel {
+  position: absolute;
+  z-index: 9;
+  left: 45%;
+  top: -18%;
+  width: 31%;
+  height: 57%;
+  opacity: 0;
+  transform-origin: 50% 88%;
+  animation: v16TrowelCover 1.28s cubic-bezier(.2, .72, .26, 1) both;
+}
+
+.stage-fx .v16-cover-trowel i {
+  position: absolute;
+  display: block;
+}
+
+.stage-fx .v16-trowel-grip {
+  z-index: 2;
+  left: 37%;
+  top: 0;
+  width: 27%;
+  height: 26%;
+  border: 2px solid rgba(77, 36, 18, .5);
+  border-radius: 48% 48% 34% 34%;
+  background: linear-gradient(90deg, #7e351b, #d67537 45%, #8f3f20 100%);
+  box-shadow: inset 3px 1px 3px rgba(255, 202, 135, .42), 0 3px 4px rgba(49, 28, 18, .24);
+}
+
+.stage-fx .v16-trowel-handle {
+  z-index: 1;
+  left: 45%;
+  top: 19%;
+  width: 11%;
+  height: 46%;
+  border-radius: 7px;
+  background: linear-gradient(90deg, #9c9c95, #f2f0e4 46%, #838781);
+  box-shadow: inset 2px 0 rgba(255,255,255,.5), 1px 2px 3px rgba(45, 39, 32, .25);
+}
+
+.stage-fx .v16-trowel-collar {
+  z-index: 3;
+  left: 37%;
+  top: 58%;
+  width: 27%;
+  height: 9%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #727a7d, #f3f2df 48%, #697174);
+  box-shadow: 0 2px 3px rgba(45, 39, 32, .28);
+}
+
+.stage-fx .v16-trowel-blade {
+  z-index: 3;
+  left: 22%;
+  top: 63%;
+  width: 57%;
+  height: 36%;
+  clip-path: polygon(13% 0, 87% 0, 100% 55%, 76% 88%, 50% 100%, 24% 88%, 0 55%);
+  background:
+    linear-gradient(100deg, rgba(255,255,255,.72), transparent 34%),
+    linear-gradient(90deg, #737e80, #e4e5dd 47%, #8c9593 100%);
+  box-shadow: inset -4px -5px 7px rgba(54, 65, 66, .22);
+}
+
+.stage-fx .v16-trowel-load {
+  z-index: 4;
+  left: 28%;
+  top: 66%;
+  width: 45%;
+  height: 22%;
+  border-radius: 48% 52% 44% 46%;
+  background:
+    radial-gradient(circle at 22% 35%, #a77c56 0 5%, transparent 6%),
+    radial-gradient(circle at 68% 53%, #68442b 0 6%, transparent 7%),
+    radial-gradient(circle at 45% 18%, #bd936e 0 4%, transparent 5%),
+    linear-gradient(160deg, #8c6243, #4b2d1a 76%);
+  box-shadow: 0 3px 3px rgba(48, 28, 17, .24);
+  animation: v16TrowelLoad 1.28s ease both;
+}
+
+.stage-fx .v16-covered-soil {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 16.5%;
+  bottom: auto;
+  width: 46%;
+  height: 12.5%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 24% 42%, #9d7456 0 3%, transparent 4%),
+    radial-gradient(circle at 72% 61%, #876144 0 4%, transparent 5%),
+    radial-gradient(circle at 49% 26%, #b08a6c 0 3%, transparent 4%),
+    radial-gradient(ellipse, #704b32, #4c2f1d 72%);
+  box-shadow: inset 0 4px 5px rgba(39, 22, 13, .28);
+  opacity: 0;
+  transform: translateX(-50%) scale(.25, .55);
+  animation: v16CoverClose .58s cubic-bezier(.2, .82, .24, 1.18) .72s both;
+}
+
+.stage-fx .v16-cover-grains {
+  position: absolute;
+  z-index: 9;
+  left: 50%;
+  top: 4%;
+  width: 1px;
+  height: 1px;
+}
+
+.stage-fx .v16-cover-grain {
+  animation-name: v16CoverGrainFall;
+  animation-duration: .54s;
+}
+
+/* Watering: the flow is a child of the rotating can rig. Its origin therefore
+   follows the real nozzle instead of relying on whole-screen percentages. */
+.stage-fx .v16-watering-rig {
+  position: absolute;
+  z-index: 8;
+  right: 3%;
+  bottom: 21%;
+  width: clamp(156px, 43vw, 188px);
+  aspect-ratio: 424 / 406;
+  transform-origin: 68% 70%;
+  overflow: visible;
+  animation: v16CanPour 1.55s cubic-bezier(.2, .7, .25, 1) both;
+}
+
+.v16-water-study .v16-watering-rig {
+  right: 1%;
+  bottom: 33%;
+}
+
+.level .guide .v16-watering-can {
+  z-index: 8;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.stage-fx .v16-water-nozzle-flow {
+  position: absolute;
+  z-index: 9;
+  left: 8%;
+  top: 41%;
+  width: 1px;
+  height: 1px;
+  transform-origin: 0 0;
+  transform: rotate(25deg);
+  overflow: visible;
+}
+
+.stage-fx .v16-water-arc {
+  position: absolute;
+  z-index: 7;
+  left: -50px;
+  top: -5px;
+  display: block;
+  width: 120px;
+  height: 100px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.stage-fx .v16-water-arc path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+}
+
+.stage-fx .v16-water-glow {
+  stroke: rgba(196, 246, 255, .55);
+  stroke-width: 9;
+  filter: blur(3px);
+  stroke-dasharray: 7 5;
+  animation: v16WaterStream .9s linear .3s both;
+}
+
+.stage-fx .v16-water-core {
+  stroke: rgba(116, 221, 245, .96);
+  stroke-width: 4.5;
+  stroke-dasharray: 5 3;
+  filter: drop-shadow(0 2px 2px rgba(22, 124, 165, .24));
+  animation: v16WaterStream .9s linear .32s both;
+}
+
+.stage-fx .v16-water-beads {
+  position: absolute;
+  z-index: 8;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.v16-water-study {
+  --v16-impact-x: 30px;
+  --v16-impact-y: 42px;
+}
+
+.v16-water-farm {
+  --v16-impact-x: -8px;
+  --v16-impact-y: 43px;
+}
+
+.stage-fx .v16-water-bead {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--v16-size);
+  height: calc(var(--v16-size) * 1.4);
+  border-radius: 62% 38% 62% 38%;
+  background: linear-gradient(145deg, rgba(238, 255, 255, .98), rgba(74, 188, 229, .95));
+  box-shadow: 0 2px 3px rgba(26, 114, 151, .25);
+  opacity: 0;
+  transform: rotate(35deg);
+  animation: v16WaterBead .54s cubic-bezier(.28, .08, .7, .36) var(--v16-delay) both;
+}
+
+.stage-fx .v16-water-impact {
+  position: absolute;
+  z-index: 9;
+  left: var(--v16-impact-x, 0);
+  top: var(--v16-impact-y, 40px);
+  width: clamp(54px, 16vw, 70px);
+  height: clamp(24px, 7vw, 31px);
+  transform: translate(-50%, -50%);
+}
+
+.stage-fx .v16-water-impact i {
+  position: absolute;
+  left: 50%;
+  bottom: 1%;
+  width: 24%;
+  height: 38%;
+  border: 3px solid rgba(115, 220, 242, .88);
+  border-radius: 50%;
+  opacity: 0;
+  animation: v16WaterRipple .6s ease-out calc(.72s + var(--v16-splash-delay, 0s)) both;
+}
+
+.stage-fx .v16-water-impact i:nth-child(2) { --v16-splash-delay: .18s; }
+.stage-fx .v16-water-impact i:nth-child(3) { --v16-splash-delay: .36s; }
+
+.stage-fx .v16-water-impact b {
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  bottom: -2%;
+  height: 48%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(75, 51, 35, .64), rgba(64, 43, 29, .08) 68%, transparent 73%);
+  opacity: 0;
+  animation: v16WetImpactSpread .75s ease-out .72s both;
+}
+
+.level .guide .v16-watered-soil {
+  animation: v16WateredSoil 1.42s ease .28s both;
+}
+
+.stage-fx .v16-watered-patch {
+  left: 53%;
+  bottom: 10%;
+  width: 22%;
+  background: radial-gradient(ellipse, rgba(47, 30, 20, .78), rgba(64, 42, 28, .22) 68%, transparent 73%);
+  animation-name: v16WetSoilSpread;
+  animation-delay: .7s;
+}
+
+@keyframes v16PotInvite {
+  0%, 100% { transform: translateY(0) scale(1); filter: brightness(1); }
+  45% { transform: translateY(-7px) scale(1.045); filter: brightness(1.1); }
+}
+
+@keyframes v16PotSettle {
+  0% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  24% { transform: translateX(-50%) translateY(3px) scale(.985, 1.015); }
+  48% { transform: translateX(-50%) translateY(-2px) scale(1.012, .99); }
+  72%, 100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+@keyframes v16BagPour {
+  0% { opacity: 1; transform: translate3d(0, 0, 0) rotate(0) scale(1); }
+  22% { opacity: 1; transform: translate3d(4px, -10px, 0) rotate(-8deg) scale(1); }
+  26% { transform: translate3d(0, 0, 0) rotate(-57deg) scale(1.02); }
+  78% { transform: translate3d(0, 0, 0) rotate(-62deg) scale(1.02); }
+  100% { opacity: .9; transform: translate3d(3px, 8px, 0) rotate(-15deg) scale(.96); }
+}
+
+@keyframes v16FeedFall {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(0) scale(.65); }
+  13% { opacity: 1; }
+  56% { opacity: 1; transform: translate3d(var(--v16-mid-x), var(--v16-mid-y), 0) rotate(145deg) scale(1); }
+  91% { opacity: .95; transform: translate3d(var(--v16-end-x), var(--v16-end-y), 0) rotate(290deg) scale(.82); }
+  100% { opacity: 0; transform: translate3d(var(--v16-end-x), var(--v16-end-y), 0) rotate(310deg) scale(.55); }
+}
+
+@keyframes v16FertilizerCascade {
+  0% { opacity: 0; transform: rotate(28deg) scaleY(.12); background-position: 0 -18px, 2px -22px, -3px -15px; }
+  18% { opacity: .92; }
+  58% { opacity: .96; transform: rotate(28deg) scaleY(1); }
+  86% { opacity: .72; transform: rotate(28deg) scaleY(1); background-position: 0 54px, 2px 62px, -3px 58px; }
+  100% { opacity: 0; transform: rotate(28deg) scaleY(.88); background-position: 0 82px, 2px 91px, -3px 86px; }
+}
+
+@keyframes v16SoilDarken {
+  0% { opacity: 0; transform: scale(.28, .16); }
+  72% { opacity: .82; transform: scale(1.08, .92); }
+  100% { opacity: .7; transform: scale(1); }
+}
+
+@keyframes v16SoilClod {
+  0% { opacity: 0; transform: translate(-50%, 3px) rotate(0) scale(.45); }
+  20% { opacity: .95; }
+  58% { opacity: 1; transform: translate(calc(-50% + var(--v16-clod-x, 0px)), -18px) rotate(var(--v16-clod-rotate, 35deg)) scale(1); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--v16-clod-x, 0px)), 0) rotate(var(--v16-clod-rotate, 35deg)) scale(.72); }
+}
+
+@keyframes v16SoilReceive {
+  0%, 31% { filter: brightness(.9) saturate(.86) drop-shadow(0 10px 10px rgba(43, 38, 27, .24)); transform: translateX(-50%) scale(1); }
+  55% { filter: brightness(.78) saturate(1.06) drop-shadow(0 10px 10px rgba(43, 38, 27, .24)); transform: translateX(-50%) scale(1.035, .92); }
+  70% { transform: translateX(-50%) scale(.98, 1.045); }
+  84% { transform: translateX(-50%) scale(1.015, .985); }
+  100% { filter: brightness(.8) saturate(1.08) drop-shadow(0 10px 10px rgba(43, 38, 27, .24)); transform: translateX(-50%) scale(1); }
+}
+
+@keyframes v16SeedIntoPot {
+  0% { opacity: 0; transform: translate3d(-50%, -205%, 0) rotate(-22deg) scale(1.06); }
+  18% { opacity: 1; }
+  58% { opacity: 1; transform: translate3d(-50%, -52%, 0) rotate(8deg) scale(.88); }
+  78% { opacity: 1; transform: translate3d(-50%, -4%, 0) rotate(18deg) scale(.55); }
+  91% { opacity: .78; transform: translate3d(-50%, 7%, 0) rotate(23deg) scale(.32); }
+  100% { opacity: .08; transform: translate3d(-50%, 13%, 0) rotate(25deg) scale(.18); }
+}
+
+@keyframes v16SeedShadow {
+  0%, 30% { opacity: 0; transform: translateX(-50%) scale(.2); }
+  78% { opacity: .58; transform: translateX(-50%) scale(.92); }
+  100% { opacity: .12; transform: translateX(-50%) scale(.3); }
+}
+
+@keyframes v16SeedDisappear {
+  0% { opacity: .7; transform: translateX(-50%) scale(.68) rotate(12deg); }
+  55% { opacity: .55; transform: translateX(-50%) translateY(5px) scale(.45) rotate(18deg); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(11px) scale(.2) rotate(22deg); }
+}
+
+@keyframes v16TrowelCover {
+  0% { opacity: 0; transform: translate3d(72px, -58px, 0) rotate(24deg) scale(.9); }
+  13% { opacity: 1; }
+  38% { opacity: 1; transform: translate3d(8px, 5px, 0) rotate(-8deg) scale(1); }
+  55% { opacity: 1; transform: translate3d(-4px, 8px, 0) rotate(-31deg) scale(1); }
+  68% { opacity: 1; transform: translate3d(-7px, 8px, 0) rotate(-43deg) scale(1); }
+  82% { opacity: 1; transform: translate3d(4px, 0, 0) rotate(-22deg) scale(.98); }
+  100% { opacity: 0; transform: translate3d(67px, -48px, 0) rotate(18deg) scale(.92); }
+}
+
+@keyframes v16TrowelLoad {
+  0%, 40% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  56% { opacity: .88; transform: translate3d(-3px, 5px, 0) scale(.86); }
+  70%, 100% { opacity: 0; transform: translate3d(-12px, 20px, 0) scale(.28); }
+}
+
+@keyframes v16CoverClose {
+  0% { opacity: 0; transform: translateX(-50%) scale(.25, .55); }
+  70% { opacity: 1; transform: translateX(-50%) scale(1.08, 1.04); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+
+@keyframes v16CoverGrainFall {
+  0% { opacity: 0; transform: translate3d(var(--v16-mid-x), -26px, 0) rotate(0) scale(.75); }
+  24% { opacity: 1; }
+  90% { opacity: .9; transform: translate3d(var(--v16-end-x), var(--v16-end-y), 0) rotate(210deg) scale(.7); }
+  100% { opacity: 0; transform: translate3d(var(--v16-end-x), var(--v16-end-y), 0) rotate(240deg) scale(.45); }
+}
+
+@keyframes v16CanPour {
+  0% { opacity: 1; transform: translate3d(0, 0, 0) rotate(0) scale(1); }
+  12% { opacity: 1; transform: translate3d(0, -7px, 0) rotate(-8deg) scale(1); }
+  24%, 79% { opacity: 1; transform: translate3d(-4px, -3px, 0) rotate(-25deg) scale(1); }
+  100% { opacity: .88; transform: translate3d(5px, 5px, 0) rotate(-8deg) scale(.97); }
+}
+
+@keyframes v16WaterStream {
+  0% { opacity: 0; stroke-dashoffset: 24; }
+  13% { opacity: .95; }
+  82% { opacity: .95; stroke-dashoffset: -9; }
+  100% { opacity: 0; stroke-dashoffset: -18; }
+}
+
+@keyframes v16WaterBead {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(35deg) scale(.65); }
+  18% { opacity: 1; }
+  54% { opacity: 1; transform: translate3d(var(--v16-mid-x), var(--v16-mid-y), 0) rotate(42deg) scale(1); }
+  92% { opacity: .9; transform: translate3d(var(--v16-end-x), var(--v16-end-y), 0) rotate(48deg) scale(.8); }
+  100% { opacity: 0; transform: translate3d(var(--v16-end-x), var(--v16-end-y), 0) rotate(52deg) scale(.5); }
+}
+
+@keyframes v16WaterRipple {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(.18); }
+  24% { opacity: .9; }
+  100% { opacity: 0; transform: translate(-50%, 0) scale(2.5, 1.35); }
+}
+
+@keyframes v16WetSoilSpread {
+  0% { opacity: 0; transform: translateX(-50%) scale(.25); }
+  100% { opacity: .78; transform: translateX(-50%) scale(1); }
+}
+
+@keyframes v16WetImpactSpread {
+  0% { opacity: 0; transform: scale(.25); }
+  100% { opacity: .78; transform: scale(1); }
+}
+
+@keyframes v16WateredSoil {
+  0%, 35% { filter: brightness(1) saturate(1) drop-shadow(0 10px 10px rgba(43, 38, 27, .24)); transform: translateX(-50%) scale(1); }
+  64% { filter: brightness(.76) saturate(1.08) drop-shadow(0 10px 10px rgba(43, 38, 27, .24)); transform: translateX(-50%) scale(1.025, .96); }
+  82% { transform: translateX(-50%) scale(.99, 1.02); }
+  100% { filter: brightness(.8) saturate(1.06) drop-shadow(0 10px 10px rgba(43, 38, 27, .24)); transform: translateX(-50%) scale(1); }
+}
+
+@media (max-width: 380px) {
+  .task-study-1 .kind-seed { left: 22%; width: 94px; height: 94px; }
+  .task-study-1 .target-pot { left:63%; right:auto; width:172px; height:auto; }
+  .stage-fx .v16-pot-assembly { left: 63%; width: 172px; }
+  .level .guide .v16-seed-into-pot,
+  .level .guide .v16-seed-in-hole,
+  .stage-fx .v16-seed-landing-shadow,
+  .stage-fx .v16-covered-soil,
+  .stage-fx .v16-cover-grains { left: 50%; }
+  .task-flowers-1 .target-compost,
+  .level .guide .v16-fertilizer-bag { left:auto; right:2%; width:145px; }
+  .stage-fx .v16-fertilizer-stream { left:59%; top:54.5%; }
+  .stage-fx .v16-fertilizer-cascade { left:calc(59% - 10px); top:54.5%; height:112px; }
+  .task-flowers-2 .target-water,
+  .task-study-2 .target-water,
+  .stage-fx .v16-watering-rig { right: -1%; width: 158px; }
+}
+
+@media (max-height: 620px) {
+  .task-study-1 .kind-seed { top:auto; bottom:57%; }
+  .task-study-1 .target-pot { top:auto; bottom:2%; width:clamp(150px, 41vw, 176px); }
+  .stage-fx .v16-pot-assembly { bottom: 2%; width: clamp(150px, 41vw, 176px); animation: none; }
+  .level .guide .v16-farm-soil { bottom: 1%; width: clamp(200px, 54vw, 230px); }
+  .task-flowers-1 .target-compost,
+  .level .guide .v16-fertilizer-bag { bottom: 18%; width: clamp(128px, 34vw, 150px); }
+  .task-flowers-2 .target-water,
+  .stage-fx .v16-water-farm .v16-watering-rig { bottom: 21%; width: clamp(140px, 38vw, 166px); }
+  .task-study-2 .target-water,
+  .stage-fx .v16-water-study .v16-watering-rig { bottom: 33%; width: clamp(140px, 38vw, 166px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v16-action *,
+  .task-study-1 .target-pot.hint-target .stage-art {
+    animation-duration: 1.25s !important;
+    animation-iteration-count: 1 !important;
+  }
+}
