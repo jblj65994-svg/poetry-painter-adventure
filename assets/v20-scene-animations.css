@@ -299,7 +299,7 @@
   .v20-world-flowers .v20-shot { background-position:50% 57%; }
   .v20-world-study .v20-shot { background-position:50% 55%; }
   .task-flowers-2 .target-water.hint-target,
-  .task-study-2 .target-water.hint-target { right:1%;animation:v20EdgeTarget 1s ease-in-out infinite; }
+  .task-study-2 .target-water.hint-target { right:1%;transform-origin:right center;animation:v20EdgeTarget 1s ease-in-out infinite; }
 }
 
 @keyframes v20EdgeTarget {
