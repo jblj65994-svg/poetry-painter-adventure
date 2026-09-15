@@ -1,0 +1,319 @@
+/* V20 scene animation layer: generated keyframes + physical contact + environmental reaction. */
+
+#stageFx.v20-scene-host {
+  z-index: 31;
+  background: #d9eef0;
+  contain: layout paint;
+  isolation: isolate;
+}
+
+#stageFx.v20-scene-host .v20-cinematic-frame,
+#stageFx.v20-scene-host .v20-cinematic-frame > div,
+#stageFx.v20-scene-host .v20-cinematic-frame > span,
+#stageFx.v20-scene-host .v20-cinematic-frame i,
+#stageFx.v20-scene-host .v20-cinematic-frame b {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+#stageFx.v20-scene-host .v20-cinematic-frame {
+  inset: 0;
+  overflow: hidden;
+  background: #d9eef0;
+  transform: translateZ(0);
+}
+
+.v20-shot {
+  position: absolute;
+  inset: -1.5%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0;
+  will-change: opacity, transform, filter, clip-path;
+  transform: translateZ(0);
+}
+
+.v20-before { opacity: 1; animation: v20BeforeShot var(--v20-duration) cubic-bezier(.22,.68,.22,1) both; }
+.v20-action { animation: v20ActionShot var(--v20-duration) cubic-bezier(.2,.7,.2,1) both; }
+.v20-settle { animation: v20SettleShot var(--v20-duration) cubic-bezier(.16,.72,.2,1) both; }
+
+@keyframes v20BeforeShot {
+  0% { opacity: 1; transform: scale(1.025); filter: brightness(.96) saturate(.94); }
+  22% { opacity: 1; transform: scale(1.065); filter: brightness(1) saturate(1); }
+  39%, 100% { opacity: 0; transform: scale(1.1); filter: brightness(1.04) saturate(1.04); }
+}
+@keyframes v20ActionShot {
+  0%, 16% { opacity: 0; transform: scale(1.12); filter: brightness(.9) saturate(.9); }
+  34% { opacity: 1; transform: scale(1.035); filter: brightness(1.04) saturate(1.08); }
+  68% { opacity: 1; transform: scale(1.01); filter: brightness(1) saturate(1.04); }
+  84%, 100% { opacity: 0; transform: scale(1.045); filter: brightness(1.03) saturate(1.06); }
+}
+@keyframes v20SettleShot {
+  0%, 66% { opacity: 0; transform: scale(1.055); filter: brightness(1.08) saturate(1.08); }
+  84% { opacity: 1; transform: scale(1.018); filter: brightness(1.03) saturate(1.04); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1) saturate(1); }
+}
+
+.v20-depth-veil {
+  z-index: 50;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 56%, transparent 42%, rgba(16,30,29,.08) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.02), transparent 52%, rgba(16,29,25,.08));
+  mix-blend-mode: multiply;
+  opacity: 0;
+  animation: v20LensSettle var(--v20-duration) ease both;
+}
+@keyframes v20LensSettle { 0%,12%{opacity:0} 34%{opacity:.48} 82%,100%{opacity:.24} }
+
+/* Lushan: full first-person action frames replace detached boat and crane stickers. */
+.v20-world-lushan .v20-shot { background-position:center 48%; }
+.v20-world-lushan.v20-effect-far .v20-action,
+.v20-world-lushan.v20-effect-far .v20-settle { background-position:center 52%; }
+.v20-world-lushan.v20-effect-crane-flight .v20-action { background-position:center 48%; }
+.v20-world-lushan.v20-effect-crane-flight .v20-settle { background-position:center 46%; }
+
+.v20-boat-depth { z-index:9;inset:0;overflow:hidden;opacity:0;animation:v20BoatDepth var(--v20-duration) ease both; }
+.v20-boat-depth i { left:-16%;top:24%;width:42%;height:56%;border-radius:48%;background:radial-gradient(ellipse,rgba(30,91,65,.32),transparent 68%);filter:blur(8px); }
+.v20-boat-depth i:last-child { left:auto;right:-18%;top:18%;width:46%;height:62%; }
+@keyframes v20BoatDepth { 0%,19%{opacity:0;transform:scale(1.18) translateY(3%)} 38%{opacity:.88} 78%{opacity:.34;transform:scale(1.02) translateY(-1%)} 100%{opacity:0;transform:scale(.98) translateY(-2%)} }
+.v20-boat-wake { z-index:24;left:13%;right:13%;bottom:-2%;height:31%;clip-path:polygon(47% 0,53% 0,100% 100%,0 100%);background:linear-gradient(90deg,transparent 8%,rgba(221,249,255,.62) 34%,rgba(255,255,255,.92) 50%,rgba(200,242,252,.62) 67%,transparent 92%);filter:blur(2px);mix-blend-mode:screen;opacity:0;transform-origin:50% 0;animation:v20BoatWake var(--v20-duration) cubic-bezier(.2,.72,.2,1) both; }
+@keyframes v20BoatWake { 0%,24%{opacity:0;transform:scale(.18,.08)} 38%{opacity:.9;transform:scale(.72,.68)} 67%{opacity:.72;transform:scale(1)} 100%{opacity:.18;transform:scale(1.2)} }
+.v20-boat-spray,.v20-water-glints,.v20-crane-feathers { z-index:30;inset:0; }
+.v20-boat-drop { left:calc(10% + var(--x) * .54);top:calc(62% + var(--y) * .19);width:6px;height:11px;border-radius:60% 40% 62% 38%;background:linear-gradient(145deg,#fff,rgba(103,210,243,.85));box-shadow:0 0 6px rgba(213,249,255,.92);opacity:0;animation:v20BoatDrop var(--v20-duration) calc(var(--delay) + .18s) ease both; }
+@keyframes v20BoatDrop { 0%,28%{opacity:0;transform:translateY(16px) scale(.25)} 39%{opacity:1;transform:translate(var(--drift),-34px) rotate(60deg) scale(1)} 63%{opacity:.75} 88%,100%{opacity:0;transform:translate(calc(var(--drift) * 1.35),31px) rotate(210deg) scale(.48)} }
+.v20-water-glint { left:calc(7% + var(--x) * .86);top:calc(51% + var(--y) * .29);width:8px;height:4px;border-radius:50%;background:rgba(255,255,255,.88);box-shadow:0 0 8px 3px rgba(179,237,255,.5);opacity:0;animation:v20WaterGlint var(--v20-duration) calc(var(--delay) + .28s) ease both; }
+@keyframes v20WaterGlint { 0%,34%{opacity:0;transform:scale(.2)} 46%{opacity:1;transform:scale(1.6)} 62%{opacity:.22;transform:scale(.55)} 79%{opacity:.9;transform:scale(1.15)} 100%{opacity:0;transform:scale(.35)} }
+
+.v20-crane-clouds { z-index:25;inset:-12%;overflow:hidden; }
+.v20-crane-clouds i { left:-34%;top:23%;width:74%;height:25%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,255,255,.95) 0,rgba(242,251,255,.72) 42%,transparent 72%);filter:blur(5px);opacity:0;animation:v20CraneCloud var(--v20-duration) cubic-bezier(.2,.62,.2,1) both; }
+.v20-crane-clouds i:nth-child(2){left:58%;top:43%;width:68%;height:29%;animation-delay:.12s}.v20-crane-clouds i:nth-child(3){left:-25%;top:66%;width:88%;height:31%;animation-delay:.24s}
+@keyframes v20CraneCloud { 0%,18%{opacity:0;transform:translateX(-22%) scale(.75)} 34%{opacity:.92} 68%{opacity:.66} 100%{opacity:0;transform:translateX(135%) scale(1.35)} }
+.v20-crane-sun { z-index:27;inset:-18%;background:radial-gradient(circle at 13% 7%,rgba(255,248,200,.72),rgba(255,237,158,.2) 18%,transparent 37%);mix-blend-mode:screen;opacity:0;animation:v20CraneSun var(--v20-duration) ease both; }
+@keyframes v20CraneSun { 0%,42%{opacity:0;transform:translate(-6%,-4%)} 70%{opacity:.88} 100%{opacity:.34;transform:none} }
+.v20-feather { left:calc(15% + var(--x) * .72);top:calc(31% + var(--y) * .48);width:16px;height:7px;border-radius:85% 15% 78% 22%;background:linear-gradient(155deg,#fff,#e8f1f3 76%,#cadbdf);box-shadow:0 2px 4px rgba(47,81,89,.14);opacity:0;animation:v20FeatherDrift var(--v20-duration) calc(var(--delay) + .22s) ease both; }
+@keyframes v20FeatherDrift { 0%,31%{opacity:0;transform:translate(-15px,-24px) rotate(-22deg) scale(.5)} 45%{opacity:.9} 100%{opacity:0;transform:translate(var(--drift),44vh) rotate(280deg) scale(.76)} }
+
+/* Xuemei: a real wide-to-close shot, snow contact, bud opening and fragrant air. */
+.v20-world-plum .v20-shot { background-position: center 45%; }
+.v20-world-plum.v20-effect-snow .v20-action { background-position: 48% 42%; }
+.v20-world-plum.v20-effect-scent .v20-before,
+.v20-world-plum.v20-effect-scent .v20-action,
+.v20-world-plum.v20-effect-scent .v20-settle { background-position: 47% 43%; }
+.v20-world-plum.v20-effect-harmony .v20-action,
+.v20-world-plum.v20-effect-harmony .v20-settle { background-position: 48% 43%; }
+
+.v20-plum-light {
+  z-index: 7;
+  inset: -15%;
+  background: radial-gradient(circle at 25% 24%, rgba(255,249,224,.8), transparent 27%);
+  opacity: 0;
+  animation: v20PlumLight var(--v20-duration) ease both;
+}
+@keyframes v20PlumLight { 0%,18%{opacity:0;transform:translate(-7%,-4%)} 40%{opacity:.7} 75%,100%{opacity:.28;transform:none} }
+
+.v20-snow-mid,.v20-snow-near,.v20-snow-contact,.v20-natural-glints,.v20-plum-petals { z-index: 18; inset: 0; }
+.v20-snow-contact { left:22%;top:24%;width:34%;height:34%;right:auto;bottom:auto; }
+.v20-snow-near { z-index: 42; filter: blur(1.6px); }
+.v20-snow-particle,.v20-snow-near-particle {
+  left: var(--x); top: -11%;
+  width: 8px; height: 8px;
+  border-radius: 55% 45% 58% 42%;
+  background: radial-gradient(circle at 35% 32%, #fff, #effaff 48%, rgba(212,237,251,.15) 72%);
+  box-shadow: 0 0 6px rgba(255,255,255,.82);
+  opacity: 0;
+  transform: scale(var(--scale));
+  animation: v20SnowFall 2.15s calc(var(--delay) + .24s) cubic-bezier(.22,.62,.35,1) both;
+}
+.v20-snow-near-particle { width: 18px; height: 15px; filter: blur(1px); animation-duration:1.9s; }
+@keyframes v20SnowFall {
+  0%{opacity:0;transform:translate3d(0,-6vh,0) rotate(0) scale(var(--scale))}
+  12%{opacity:.96}
+  82%{opacity:.9}
+  100%{opacity:0;transform:translate3d(var(--drift),104vh,0) rotate(330deg) scale(var(--scale))}
+}
+.v20-snow-touch {
+  left:var(--x);top:var(--y);
+  width: 5px; height: 5px; border-radius: 50%;
+  background:#fff; box-shadow:0 0 0 2px rgba(213,240,255,.62),0 0 13px 5px rgba(255,255,255,.82);
+  opacity:0; animation:v20SnowTouch var(--v20-duration) calc(var(--delay) + .2s) ease both;
+}
+@keyframes v20SnowTouch { 0%,28%{opacity:0;transform:scale(.15)} 40%{opacity:1;transform:scale(1.35)} 55%,100%{opacity:0;transform:scale(2.7)} }
+
+.v20-scent-flow { z-index: 28; inset: 0; overflow: hidden; }
+.v20-scent-flow b { left:33%; top:43%; width:58px; height:58px; border-radius:50%; background:radial-gradient(circle,rgba(255,246,195,.46),transparent 68%); filter:blur(4px); opacity:0; animation:v20ScentPuff var(--v20-duration) .14s ease both; }
+.v20-scent-flow b:last-child{left:62%;top:55%;width:86px;height:86px;animation-delay:.3s}
+@keyframes v20ScentPuff { 0%,28%{opacity:0;transform:scale(.25)} 50%{opacity:.8} 100%{opacity:0;transform:translate(72px,-32px) scale(1.8)} }
+
+.v20-plum-petal,.v20-bloom-petal,.v20-near-petal,.v20-compost-petal {
+  left:var(--x); top:var(--y); width:12px; height:8px;
+  border-radius:70% 30% 70% 30%;
+  background:linear-gradient(145deg,#fff0f4,#ef6689 72%,#d74270);
+  box-shadow:0 2px 4px rgba(120,31,56,.18);
+  opacity:0;
+  animation:v20PetalFloat var(--v20-duration) calc(var(--delay) + .22s) ease both;
+}
+@keyframes v20PetalFloat { 0%,24%{opacity:0;transform:translate3d(-18px,-25px,0) rotate(0) scale(.45)} 42%{opacity:1} 100%{opacity:0;transform:translate3d(var(--drift),45vh,0) rotate(310deg) scale(var(--scale))} }
+
+.v20-natural-glint,.v20-leaf-glint {
+  left:var(--x); top:var(--y); width:5px; height:5px; border-radius:50%;
+  background:#fffbd5; box-shadow:0 0 4px 2px #fff6b4,0 0 14px 6px rgba(255,228,113,.48);
+  opacity:0; animation:v20NaturalGlint var(--v20-duration) calc(var(--delay) + .45s) ease both;
+}
+@keyframes v20NaturalGlint { 0%,46%{opacity:0;transform:scale(.15) rotate(0)} 58%{opacity:1;transform:scale(1.6) rotate(50deg)} 76%{opacity:.35;transform:scale(.65) rotate(100deg)} 90%{opacity:.95;transform:scale(1.15) rotate(160deg)} 100%{opacity:.3;transform:scale(.45) rotate(190deg)} }
+
+/* Flowers: generated action shots fill the stage; particles meet the painted soil. */
+.v20-world-flowers .v20-shot { background-position:center 55%; }
+.v20-world-flowers.v20-effect-compost .v20-action,
+.v20-world-flowers.v20-effect-compost .v20-settle { background-position:center 53%; }
+.v20-world-flowers.v20-effect-fertilize .v20-action,
+.v20-world-flowers.v20-effect-fertilize .v20-settle { background-position:center 55%; }
+.v20-world-flowers.v20-effect-water .v20-action { background-position:center 55%; }
+.v20-world-flowers.v20-effect-water .v20-settle,
+.v20-world-flowers.v20-effect-sprout .v20-action,
+.v20-world-flowers.v20-effect-sprout .v20-settle,
+.v20-world-flowers.v20-effect-young .v20-shot,
+.v20-world-flowers.v20-effect-bloom .v20-shot { background-position:center 57%; }
+
+.v20-flowers-near { z-index:43; inset:0; filter:blur(2.2px); }
+.v20-near-petal { width:24px;height:17px;animation-delay:calc(var(--delay) + .08s); }
+
+.v20-compost-fall,.v20-fertilizer-cascade,.v20-water-contact,.v20-leaf-lift,.v20-flower-celebration { z-index:24; inset:0; }
+.v20-compost-petal-zone { position:absolute;left:7%;top:17%;width:45%;height:34%; }
+.v20-compost-crumb-zone { position:absolute;left:28%;top:26%;width:46%;height:30%; }
+.v20-compost-petal { left:var(--x);top:var(--y);animation-name:v20CompostPetalDrop; }
+@keyframes v20CompostPetalDrop { 0%,20%{opacity:0;transform:translate(-55px,-65px) rotate(-50deg)} 34%{opacity:1} 70%{opacity:.9} 100%{opacity:0;transform:translate(42px,43vh) rotate(285deg) scale(.55)} }
+.v20-compost-crumb,.v20-fertilizer-grain {
+  left:var(--x);top:var(--y);
+  width:7px;height:6px;border-radius:45%;background:linear-gradient(145deg,#8b5b2c,#3d2412);
+  box-shadow:0 2px 2px rgba(40,23,10,.28);opacity:0;
+  animation:v20CompostCrumb var(--v20-duration) calc(var(--delay) + .28s) cubic-bezier(.35,.04,.68,.42) both;
+}
+@keyframes v20CompostCrumb { 0%,23%{opacity:0;transform:translate(-38px,-32px) rotate(0)} 34%{opacity:1} 74%{opacity:1} 100%{opacity:0;transform:translate(34px,37vh) rotate(240deg) scale(.65)} }
+.v20-compost-breath { z-index:26; left:21%;top:47%;width:70%;height:35%; }
+.v20-compost-breath i { left:10%;bottom:8%;width:70px;height:44px;border-radius:50%;background:radial-gradient(ellipse,rgba(238,222,181,.55),transparent 70%);filter:blur(5px);opacity:0;animation:v20CompostBreath var(--v20-duration) ease both; }
+.v20-compost-breath i:nth-child(2){left:38%;bottom:14%;animation-delay:.12s}.v20-compost-breath i:nth-child(3){left:64%;bottom:5%;animation-delay:.23s}
+@keyframes v20CompostBreath { 0%,46%{opacity:0;transform:translateY(25px) scale(.45)} 62%{opacity:.72} 100%{opacity:0;transform:translateY(-65px) scale(1.7)} }
+
+.v20-fertilizer-grain {
+  left:var(--x);top:var(--y);
+  width:6px;height:6px;background:linear-gradient(145deg,#5d3b1f,#21150c);
+  animation-name:v20FertilizerPour;
+}
+.v20-fertilizer-cascade { left:58%;top:31%;width:28%;height:18%;right:auto;bottom:auto; }
+@keyframes v20FertilizerPour { 0%,22%{opacity:0;transform:translate(34px,-12px) rotate(0)} 34%{opacity:1} 83%{opacity:1} 100%{opacity:0;transform:translate(-58px,31vh) rotate(270deg) scale(.55)} }
+.v20-soil-response { z-index:27; left:22%; top:61%; width:58%; height:23%; opacity:0; animation:v20SoilResponse var(--v20-duration) ease both; }
+.v20-soil-response::before { content:"";position:absolute;inset:5%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,214,95,.36),transparent 68%);filter:blur(5px); }
+.v20-soil-response i { left:38%;top:39%;width:8px;height:5px;border-radius:50%;background:rgba(255,247,191,.92);box-shadow:34px 0 0 rgba(255,247,191,.92); }
+.v20-soil-response b { left:44%;top:52%;width:34px;height:15px;border-bottom:4px solid rgba(255,243,179,.88);border-radius:0 0 35px 35px; }
+@keyframes v20SoilResponse { 0%,54%{opacity:0;transform:scale(.65)} 70%{opacity:1;transform:scale(1.08)} 100%{opacity:.72;transform:scale(1)} }
+
+.v20-water-sheets { z-index:24; inset:0; opacity:0; animation:v20WaterSheets var(--v20-duration) ease both; }
+.v20-water-sheets i { right:19%;top:42%;width:4px;height:38%;border-radius:50%;background:linear-gradient(#effcff,rgba(115,208,245,.9),rgba(255,255,255,.24));box-shadow:0 0 7px rgba(198,244,255,.8);transform:rotate(35deg);transform-origin:top center; }
+.v20-water-sheets i:nth-child(2){right:24%;height:35%;transform:rotate(30deg)}.v20-water-sheets i:nth-child(3){right:29%;height:32%;transform:rotate(25deg)}.v20-water-sheets i:nth-child(4){right:34%;height:29%;transform:rotate(18deg)}.v20-water-sheets i:nth-child(5){right:39%;height:25%;transform:rotate(12deg)}
+@keyframes v20WaterSheets { 0%,24%{opacity:0;transform:scaleY(.25)} 36%,68%{opacity:.78;transform:scaleY(1)} 86%,100%{opacity:0;transform:scaleY(.78)} }
+.v20-water-contact { left:22%;top:62%;width:58%;height:14%;right:auto;bottom:auto; }
+.v20-water-splash { left:var(--x);top:var(--y);width:7px;height:11px;border-radius:55% 45% 55% 45%;background:linear-gradient(150deg,#fff,rgba(82,190,235,.82));box-shadow:0 0 6px rgba(219,250,255,.9);opacity:0;animation:v20WaterSplash var(--v20-duration) calc(var(--delay) + .28s) ease both; }
+@keyframes v20WaterSplash { 0%,32%{opacity:0;transform:translateY(18px) scale(.3)} 44%{opacity:1;transform:translateY(-22px) scale(1)} 70%{opacity:.75;transform:translate(var(--drift),-5px) rotate(160deg)} 100%{opacity:0;transform:translate(var(--drift),38px) rotate(230deg) scale(.55)} }
+.v20-soil-drink,.v20-pot-drink { z-index:23;left:12%;right:10%;top:62%;height:24%;border-radius:50%;background:radial-gradient(ellipse,rgba(45,86,69,.36),transparent 67%);mix-blend-mode:multiply;opacity:0;animation:v20SoilDrink var(--v20-duration) ease both; }
+@keyframes v20SoilDrink { 0%,28%{opacity:0;transform:scale(.35)} 62%{opacity:.74;transform:scale(1)} 100%{opacity:.28;transform:scale(1.12)} }
+
+.v20-growth-wave { z-index:22;left:15%;top:57%;width:70%;height:30%;border:0;border-radius:50%;background:radial-gradient(ellipse,rgba(205,255,139,.48),rgba(177,235,110,.18) 35%,transparent 69%);filter:blur(8px);opacity:0;animation:v20GrowthWave var(--v20-duration) ease both; }
+.v20-growth-wave-two { animation-delay:.18s; }
+@keyframes v20GrowthWave { 0%,30%{opacity:0;transform:scale(.2)} 48%{opacity:.9} 82%,100%{opacity:0;transform:scale(1.45)} }
+.v20-leaf-lift { top:57%;height:28%;bottom:auto; }
+.v20-leaf-lift .v20-leaf-glint { top:var(--y); }
+.v20-green-breath { z-index:21;left:8%;right:8%;top:48%;height:44%;background:radial-gradient(ellipse,rgba(186,242,112,.4),transparent 68%);filter:blur(6px);opacity:0;animation:v20GreenBreath var(--v20-duration) ease both; }
+@keyframes v20GreenBreath { 0%,28%{opacity:0;transform:scale(.45)} 56%{opacity:.85;transform:scale(1.08)} 100%{opacity:.22;transform:scale(1)} }
+.v20-bloom-ripple { z-index:25;left:8%;right:8%;top:53%;height:35%; }
+.v20-bloom-ripple i { left:50%;top:50%;width:38%;height:28%;border:0;border-radius:50%;background:radial-gradient(ellipse,rgba(255,242,174,.66),rgba(255,220,104,.2) 38%,transparent 70%);filter:blur(7px);opacity:0;transform:translate(-50%,-50%);animation:v20BloomRipple var(--v20-duration) ease both; }
+.v20-bloom-ripple i:nth-child(2){animation-delay:.13s}.v20-bloom-ripple i:nth-child(3){animation-delay:.27s}
+@keyframes v20BloomRipple { 0%,31%{opacity:0;transform:translate(-50%,-50%) scale(.15)} 47%{opacity:1} 82%,100%{opacity:0;transform:translate(-50%,-50%) scale(3)} }
+.v20-bloom-petal { animation-delay:calc(var(--delay) + .35s); }
+
+/* Study garden: hand-to-soil action, real water stream, time passing, then a living sprout. */
+.v20-world-study .v20-shot { background-position:center 54%; }
+.v20-world-study.v20-effect-seed .v20-action,
+.v20-world-study.v20-effect-seed .v20-settle,
+.v20-world-study.v20-effect-soil-cover .v20-shot { background-position:center 55%; }
+.v20-world-study.v20-effect-water .v20-action,
+.v20-world-study.v20-effect-water .v20-settle { background-position:center 54%; }
+.v20-world-study.v20-effect-sprout .v20-action,
+.v20-world-study.v20-effect-sprout .v20-settle { background-position:center 54%; }
+.v20-study-foreground { z-index:44;inset:0;background:linear-gradient(90deg,rgba(9,35,24,.08),transparent 20%,transparent 78%,rgba(9,35,24,.08));filter:blur(.4px);opacity:0;animation:v20StudyForeground var(--v20-duration) ease both; }
+@keyframes v20StudyForeground { 0%,18%{opacity:0} 42%,100%{opacity:1} }
+
+.v20-seed-contact { z-index:26;left:39%;top:56%;width:26%;height:20%;opacity:0;animation:v20SeedContact var(--v20-duration) ease both; }
+.v20-seed-contact i { left:50%;top:48%;width:62px;height:42px;border:0;border-radius:50%;background:radial-gradient(ellipse,rgba(255,238,158,.8),rgba(255,220,106,.24) 42%,transparent 72%);filter:blur(5px);transform:translate(-50%,-50%); }
+.v20-seed-contact b { left:50%;top:48%;width:6px;height:6px;border-radius:50%;background:#74441e;box-shadow:0 0 0 5px rgba(112,70,32,.25);transform:translate(-50%,-50%); }
+@keyframes v20SeedContact { 0%,32%{opacity:0;transform:scale(.25)} 46%{opacity:1;transform:scale(1.18)} 65%{opacity:.68;transform:scale(.82)} 100%{opacity:0;transform:scale(.45)} }
+.v20-pot-soil-puff { z-index:28;inset:0; }
+.v20-pot-soil-puff { left:40%;top:59%;width:24%;height:13%;right:auto;bottom:auto; }
+.v20-pot-soil-grain { left:var(--x);top:var(--y);width:6px;height:5px;border-radius:50%;background:#6a3e21;box-shadow:0 1px 2px rgba(35,17,7,.3);opacity:0;animation:v20PotSoilPuff var(--v20-duration) calc(var(--delay) + .2s) ease both; }
+@keyframes v20PotSoilPuff { 0%,35%{opacity:0;transform:translateY(8px) scale(.2)} 47%{opacity:1;transform:translate(var(--drift),-20px) scale(1)} 74%{opacity:.72} 100%{opacity:0;transform:translate(var(--drift),28px) rotate(170deg) scale(.45)} }
+.v20-cover-puff .v20-pot-soil-grain { animation-delay:calc(var(--delay) + .1s); }
+.v20-soil-cover-hand { z-index:25;left:24%;top:50%;width:52%;height:24%;border-radius:50%;background:radial-gradient(ellipse at 50% 60%,rgba(100,61,32,.28),transparent 66%);opacity:0;animation:v20SoilCoverSweep var(--v20-duration) ease both; }
+@keyframes v20SoilCoverSweep { 0%,20%{opacity:0;transform:translateX(-25%) scale(.55)} 44%{opacity:.9;transform:translateX(0) scale(1)} 68%{opacity:.5;transform:translateX(12%)} 100%{opacity:0;transform:translateX(25%) scale(1.15)} }
+.v20-covered-hole { z-index:27;left:43%;top:61%;width:17%;height:6%;border-radius:50%;background:radial-gradient(ellipse,#5e351d 0,#744626 42%,rgba(105,61,31,.25) 70%,transparent 74%);filter:blur(.5px);opacity:0;animation:v20CoverHole var(--v20-duration) ease both; }
+@keyframes v20CoverHole { 0%,34%{opacity:0;transform:scale(.2)} 58%{opacity:1;transform:scale(1.18)} 100%{opacity:.92;transform:scale(1)} }
+
+.v20-study-water-stream { z-index:26;inset:0;opacity:0;animation:v20StudyWaterOn var(--v20-duration) ease both; }
+.v20-study-water-stream i { right:18%;top:42%;width:4px;height:30%;border-radius:50%;background:linear-gradient(#efffff,#73d2f5 70%,rgba(255,255,255,.25));box-shadow:0 0 7px rgba(190,243,255,.9);transform:rotate(45deg);transform-origin:top center; }
+.v20-study-water-stream i:nth-child(2){right:21%;height:28%;transform:rotate(40deg)}.v20-study-water-stream i:nth-child(3){right:24%;height:26%;transform:rotate(35deg)}.v20-study-water-stream i:nth-child(4){right:27%;height:23%;transform:rotate(29deg)}
+@keyframes v20StudyWaterOn { 0%,27%{opacity:0;transform:scaleY(.25)} 42%,72%{opacity:.72;transform:scaleY(1)} 91%,100%{opacity:0;transform:scaleY(.8)} }
+.v20-study-water-contact { z-index:29;left:39%;top:60%;width:24%;height:12%; }
+.v20-study-water-contact .v20-water-splash { left:var(--x);top:var(--y); }
+.v20-pot-drink { left:34%;right:26%;top:59%;height:16%; }
+
+.v20-night-cycle { z-index:32;inset:0;background:linear-gradient(180deg,rgba(5,20,68,.02),rgba(4,18,52,.22));opacity:0;animation:v20NightCycle var(--v20-duration) ease both; }
+.v20-moon { display:none !important; }
+.v20-night-sweep { left:-20%;top:48%;width:140%;height:18%;background:linear-gradient(90deg,transparent,rgba(115,160,235,.22),rgba(255,229,142,.16),transparent);filter:blur(9px);transform:rotate(-13deg); }
+.v20-night-star { left:var(--x);top:clamp(5%,var(--y),50%);width:4px;height:4px;border-radius:50%;background:#fffbd1;box-shadow:0 0 8px 2px rgba(255,244,174,.85);opacity:0;animation:v20NightStar var(--v20-duration) calc(var(--delay) + .12s) ease both; }
+@keyframes v20NightCycle { 0%,18%{opacity:0} 38%{opacity:.92} 76%{opacity:.72} 100%{opacity:.12} }
+@keyframes v20NightStar { 0%,25%{opacity:0;transform:scale(.25)} 42%{opacity:1;transform:scale(1.35)} 58%{opacity:.28;transform:scale(.6)} 76%{opacity:1;transform:scale(1.1)} 100%{opacity:0;transform:scale(.4)} }
+.v20-underground-pulse { z-index:34;left:32%;top:58%;width:42%;height:18%; }
+.v20-underground-pulse i { left:50%;top:50%;width:72px;height:38px;border:0;border-radius:50%;background:radial-gradient(ellipse,rgba(214,251,139,.64),rgba(180,229,103,.16) 45%,transparent 72%);filter:blur(6px);opacity:0;transform:translate(-50%,-50%);animation:v20UndergroundPulse var(--v20-duration) ease both; }
+.v20-underground-pulse i:nth-child(2){animation-delay:.18s}.v20-underground-pulse i:nth-child(3){animation-delay:.36s}
+@keyframes v20UndergroundPulse { 0%,31%{opacity:0;transform:translate(-50%,-50%) scale(.25)} 48%{opacity:.92} 82%,100%{opacity:0;transform:translate(-50%,-50%) scale(4.2)} }
+
+.v20-sprout-reveal { z-index:24;left:29%;right:24%;top:45%;height:36%;border-radius:45%;background:radial-gradient(ellipse at 50% 65%,rgba(187,246,126,.5),transparent 65%);filter:blur(5px);opacity:0;animation:v20SproutReveal var(--v20-duration) ease both; }
+.v20-sprout-breath { z-index:25;left:39%;top:48%;width:24%;height:30%;border:0;border-radius:50%;background:radial-gradient(ellipse,rgba(220,255,170,.72),rgba(181,240,115,.2) 42%,transparent 72%);filter:blur(7px);opacity:0;animation:v20SproutBreath var(--v20-duration) ease both; }
+.v20-study-glints { z-index:29;left:33%;top:42%;width:32%;height:38%; }
+.v20-study-glints .v20-natural-glint { left:var(--x);top:var(--y); }
+@keyframes v20SproutReveal { 0%,28%{opacity:0;transform:translateY(28px) scale(.25,.1)} 55%{opacity:.95;transform:translateY(-5px) scale(1.12,1.2)} 80%,100%{opacity:.32;transform:none} }
+@keyframes v20SproutBreath { 0%,38%{opacity:0;transform:scale(.2,.08)} 57%{opacity:1;transform:scale(1.15)} 82%,100%{opacity:0;transform:scale(1.65)} }
+
+/* During the action the feedback is prose only; the old emoji/logo no longer covers the scene. */
+#levelScreen.is-performing #stageFeedback #visualIcon,
+#levelScreen.v20-cinematic-active #stageFeedback #visualIcon { display:none !important; }
+#levelScreen.is-performing #stageFeedback,
+#levelScreen.v20-cinematic-active #stageFeedback { gap:0; }
+
+@media (max-width:380px) {
+  .v20-world-plum .v20-shot { background-position:49% 45%; }
+  .v20-world-flowers .v20-shot { background-position:50% 57%; }
+  .v20-world-study .v20-shot { background-position:50% 55%; }
+}
+
+@media (max-height:700px) {
+  .v20-world-flowers .v20-shot { background-position:center 61%; }
+  .v20-world-study .v20-shot { background-position:center 59%; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  #stageFx.v20-scene-host .v20-cinematic-frame *,
+  #stageFx.v20-scene-host .v20-cinematic-frame *::before,
+  #stageFx.v20-scene-host .v20-cinematic-frame *::after {
+    animation-duration:1ms !important;
+    animation-delay:0ms !important;
+    animation-iteration-count:1 !important;
+  }
+  #stageFx.v20-scene-host .v20-before,
+  #stageFx.v20-scene-host .v20-action { opacity:0 !important; }
+  #stageFx.v20-scene-host .v20-settle { opacity:1 !important;transform:none !important;filter:none !important; }
+}

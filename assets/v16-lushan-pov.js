@@ -276,6 +276,9 @@
       clearMode(level);
       return;
     }
+    // V20 owns its generated full-scene shots. Do not replace them with the
+    // older detached foreground rig when the host/class mutation is observed.
+    if (fx.classList.contains('v20-scene-host') || fx.querySelector('.v20-cinematic-frame')) return;
     if (fx.querySelector('.v16-pov')) return;
     const task = currentTask();
     const effect = effectFromHost(fx);

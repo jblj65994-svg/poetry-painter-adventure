@@ -1134,6 +1134,11 @@
 
   async function runStageEffect(effect, caption, finalAction) {
     const epoch = runtime.epoch;
+    let effectDuration = 1800;
+    try {
+      const requestedDuration = window.V20SceneAnimations?.duration?.(taskKey(), effect);
+      if (Number.isFinite(requestedDuration) && requestedDuration >= 300 && requestedDuration <= 15000) effectDuration = requestedDuration;
+    } catch (_) {}
     cancelVoice();
     setPhase(PHASE.PERFORMING);
     disableTaskControls();
@@ -1153,7 +1158,7 @@
     guide.classList.add(effect === 'snow' || effect === 'scent' ? 'react-surprise' : 'react-cheer');
     await new Promise(resolve => {
       runtime.actionResolve = resolve;
-      runtime.actionTimer = setTimeout(() => { runtime.actionResolve = null; resolve(); }, 1800);
+      runtime.actionTimer = setTimeout(() => { runtime.actionResolve = null; resolve(); }, effectDuration);
     });
     if (epoch !== runtime.epoch) return;
     el('levelScreen').classList.remove('is-performing');
@@ -1175,6 +1180,11 @@
     for (let index = 0; index < effects.length; index += 1) {
       if (epoch !== runtime.epoch) return;
       const effect = effects[index];
+      let effectDuration = 1320;
+      try {
+        const requestedDuration = window.V20SceneAnimations?.duration?.(taskKey(), effect);
+        if (Number.isFinite(requestedDuration) && requestedDuration >= 300 && requestedDuration <= 15000) effectDuration = requestedDuration;
+      } catch (_) {}
       if (stateProgress && stateProgress[index] != null && window.updatePoemState) window.updatePoemState(taskKey(), stateProgress[index]);
       el('visualIcon').innerHTML = stageArt(effectKind(effect));
       el('visualText').textContent = index === effects.length - 1 ? caption : '看，画面还在变化！';
@@ -1190,7 +1200,7 @@
       guide.classList.add(index === effects.length - 1 ? 'react-cheer' : 'react-surprise');
       await new Promise(resolve => {
         runtime.actionResolve = resolve;
-        runtime.actionTimer = setTimeout(() => { runtime.actionResolve = null; resolve(); }, 1320);
+        runtime.actionTimer = setTimeout(() => { runtime.actionResolve = null; resolve(); }, effectDuration);
       });
     }
     if (epoch !== runtime.epoch) return;
