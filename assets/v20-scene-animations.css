@@ -7,6 +7,15 @@
   isolation: isolate;
 }
 
+/* An empty cinematic host must never cover the following task while observers
+   finish their asynchronous cleanup. */
+#stageFx.v19-scene-host:empty,
+#stageFx.v20-scene-host:empty {
+  z-index: 2 !important;
+  background: transparent !important;
+  contain: none !important;
+}
+
 #stageFx.v20-scene-host .v20-cinematic-frame,
 #stageFx.v20-scene-host .v20-cinematic-frame > div,
 #stageFx.v20-scene-host .v20-cinematic-frame > span,

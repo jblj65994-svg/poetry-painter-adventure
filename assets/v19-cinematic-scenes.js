@@ -129,7 +129,15 @@
   }
 
   function syncTaskScene(force) {
-    if (!level.classList.contains('active')) return;
+    if (!level.classList.contains('active')) {
+      clearTimers();
+      removeClasses(level, [
+        'v19-cinematic-active', 'v19-pavilion-entered', 'v19-boat-entered',
+        'v19-flight-entered', 'v19-book-opened', 'v19-garden-entered'
+      ]);
+      lastTask = '';
+      return;
+    }
     if (level.classList.contains('story-paused')) {
       clearTimers();
       removeClasses(level, ['v19-cinematic-active', 'v19-pavilion-entered', 'v19-boat-entered', 'v19-flight-entered', 'v19-book-opened', 'v19-garden-entered']);

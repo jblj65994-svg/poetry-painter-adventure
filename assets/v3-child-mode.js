@@ -605,6 +605,11 @@
   resetStep = function () {
     stopTimers();
     cancelVoice();
+    // A finished cinematic keeps its host class so the final frame can remain
+    // visible while praise is playing.  Tear that host down synchronously when
+    // the next task starts; clearing only its children leaves an opaque scene
+    // layer above the next task's artwork and controls.
+    clearStageRuntime();
     runtime.epoch += 1;
     runtime.wrongCount = 0;
     runtime.idleLevel = 0;
@@ -644,9 +649,22 @@
     if (camera) { camera.style.transform = ''; camera.style.filter = ''; camera.style.willChange = ''; }
     const fx = el('stageFx');
     cancelElementAnimations(fx);
-    if (fx) { fx.innerHTML = ''; fx.className = 'stage-fx'; fx.removeAttribute('data-v16-pov-key'); fx.removeAttribute('aria-label'); }
+    if (fx) {
+      fx.innerHTML = '';
+      fx.className = 'stage-fx';
+      fx.removeAttribute('data-v16-pov-key');
+      fx.removeAttribute('data-v19-scene-key');
+      fx.removeAttribute('data-v20-scene-key');
+      fx.removeAttribute('aria-label');
+    }
     const level = el('levelScreen');
-    if (level) level.classList.remove('v16-pov-active', 'v16-pov-walk', 'v16-pov-boat', 'v16-pov-flight', 'story-paused');
+    if (level) level.classList.remove(
+      'v16-pov-active', 'v16-pov-walk', 'v16-pov-boat', 'v16-pov-flight',
+      'v17-farm-active', 'v17-study-active', 'v17-pov-polished',
+      'v19-cinematic-active', 'v19-pavilion-entered', 'v19-boat-entered',
+      'v19-flight-entered', 'v19-book-opened', 'v19-garden-entered',
+      'v20-cinematic-active', 'story-paused'
+    );
   }
 
   function hydrateGuideAvatars() {
