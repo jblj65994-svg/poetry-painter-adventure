@@ -36,7 +36,7 @@
   const effectPlan = Object.freeze({
     panorama: [{ clip: 'footsteps', volume: 0.42 }],
     peak: [{ clip: 'arrive', volume: 0.42 }],
-    far: [{ clip: 'paddle', volume: 0.38 }],
+    far: [{ clip: 'paddle', volume: 0.72 }],
     'crane-flight': [{ clip: 'crane', volume: 0.34 }],
     snow: [{ clip: 'snow', volume: 0.32 }],
     scent: [{ clip: 'scent', volume: 0.34 }],

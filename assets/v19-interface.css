@@ -1,0 +1,311 @@
+/* V19 interface polish: one clear message at a time and child-readable controls. */
+:root {
+  --v19-glass: rgba(255, 251, 239, .78);
+  --v19-glass-edge: rgba(255, 255, 255, .76);
+  --v19-ink: #273b34;
+  --v19-mint: #e7fff6;
+  --v19-mint-edge: rgba(82, 184, 151, .28);
+}
+
+/* The title owns the flexible column; the two labelled controls never cover it. */
+.level.active .activity-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.level.active .activity-head > div:first-child,
+.level.active .activity-head h2 {
+  min-width: 0;
+}
+
+.level.active .activity-head h2 {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--v19-ink);
+  font-size: 18px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.level.active .activity-head > div:last-child {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+/* Warm glass keeps the artwork visible while keeping all copy easy to read. */
+.level.active .guide { overflow: visible; }
+
+/* The camera continues behind the glass tray while the interactive layers stay
+   inside the illustrated stage. */
+.level.active .scene-camera {
+  bottom: calc(-1 * var(--v15-panel) - 3%);
+}
+
+.level.active #stageFx,
+.level.active .task-wrap { overflow: hidden; }
+
+.level.active .activity {
+  color: var(--v19-ink);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .30), rgba(255, 248, 229, .10)),
+    var(--v19-glass);
+  border: 1px solid var(--v19-glass-edge);
+  border-bottom: 0;
+  box-shadow:
+    0 -10px 30px rgba(31, 53, 44, .17),
+    inset 0 1px 0 rgba(255, 255, 255, .88);
+  -webkit-backdrop-filter: blur(18px) saturate(1.18);
+  backdrop-filter: blur(18px) saturate(1.18);
+}
+
+.level.active .narration-status {
+  border: 1px solid rgba(255, 255, 255, .64);
+  background: rgba(255, 247, 214, .74);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55);
+}
+
+.level.active.phase-waiting .narration-status {
+  background: rgba(229, 255, 245, .78);
+}
+
+/* Replace the unexplained round icons with compact, readable pill buttons. */
+.level.active .activity-head .speak.v19-audio-pill {
+  width: auto;
+  min-width: 76px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid rgba(224, 177, 66, .36);
+  border-radius: 999px;
+  background: rgba(255, 246, 201, .91);
+  color: #674d23;
+  box-shadow: 0 4px 12px rgba(73, 62, 36, .10), inset 0 1px 0 #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.level.active .activity-head .speak.v19-audio-pill:active:not(:disabled) {
+  transform: translateY(1px) scale(.98);
+}
+
+.level.active .activity-head .speak.v19-audio-pill:focus-visible {
+  outline: 3px solid rgba(85, 169, 143, .75);
+  outline-offset: 2px;
+}
+
+.level.active .activity-head .speak.v19-audio-pill:disabled {
+  opacity: .54;
+  filter: saturate(.62);
+  cursor: default;
+}
+
+.v19-story-mark {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  border-radius: 50%;
+  background: #f2a642;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .82);
+}
+
+.v19-story-mark::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 5px;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 6px solid #fff;
+}
+
+.v19-listen-mark {
+  width: 19px;
+  height: 18px;
+  flex: 0 0 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.v19-listen-mark i {
+  width: 3px;
+  border-radius: 3px;
+  background: #43a383;
+}
+
+.v19-listen-mark i:nth-child(1) { height: 7px; }
+.v19-listen-mark i:nth-child(2) { height: 14px; }
+.v19-listen-mark i:nth-child(3) { height: 10px; }
+
+/* The guide and the short action feedback share one presentation slot. */
+.level.active .guide-bubble,
+.level.active .stage-feedback {
+  top: 10px;
+  right: 12px;
+  width: auto;
+  max-width: min(68%, 286px);
+  box-sizing: border-box;
+}
+
+.level.active .guide-bubble {
+  min-width: min(54%, 230px);
+  padding: 12px 13px;
+  overflow: visible;
+  border: 2px solid rgba(255, 255, 255, .86);
+  background: rgba(255, 255, 255, .88);
+  font-size: 13px;
+  line-height: 1.52;
+  overflow-wrap: anywhere;
+  -webkit-backdrop-filter: blur(10px) saturate(1.12);
+  backdrop-filter: blur(10px) saturate(1.12);
+}
+
+.level.active .guide-bubble.v17-ruby-ready {
+  padding-top: 16px;
+  line-height: 1.78;
+}
+
+.level.active .guide-bubble ruby[data-v17-ruby] {
+  line-height: 1.15;
+}
+
+.level.active .guide-bubble ruby[data-v17-ruby] rt {
+  font-size: .46em;
+  line-height: 1;
+}
+
+.level.active #stageFeedback {
+  display: none;
+  min-width: 0;
+  min-height: 44px;
+  max-height: 82px;
+  padding: 8px 11px;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  border-radius: 16px;
+  background: rgba(255, 249, 214, .91);
+  font-size: 12px;
+  line-height: 1.42;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px) scale(.98);
+  -webkit-backdrop-filter: blur(10px) saturate(1.08);
+  backdrop-filter: blur(10px) saturate(1.08);
+}
+
+.level.active #stageFeedback #visualText {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.level.active #stageFeedback .visual-track {
+  display: none;
+}
+
+.level.active.phase-performing #guideBubble {
+  display: none;
+}
+
+.level.active.phase-performing #stageFeedback {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.level.active.phase-done #stageFeedback,
+.level.active:not(.phase-performing) #stageFeedback {
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Both buttons trigger the same finished explanation, so show only one. */
+.level.active.phase-done #storyReplay {
+  display: none;
+}
+
+@media (max-width: 400px) {
+  .level.active .activity {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .level.active .activity-head {
+    gap: 6px;
+  }
+
+  .level.active .activity-head > div:last-child {
+    gap: 5px;
+  }
+
+  .level.active .activity-head .speak.v19-audio-pill {
+    min-width: 70px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0 8px;
+    gap: 5px;
+    font-size: 11px;
+  }
+
+  .level.active .activity-head h2 {
+    font-size: 17px;
+  }
+
+  .level.active .guide-bubble,
+  .level.active .stage-feedback {
+    right: 10px;
+    max-width: min(72%, 270px);
+  }
+}
+
+@media (max-height: 740px) {
+  .level.active .guide-bubble,
+  .level.active .stage-feedback {
+    top: 7px;
+  }
+
+  .level.active .guide-bubble {
+    padding: 9px 11px;
+    font-size: 12px;
+    line-height: 1.46;
+  }
+
+  .level.active .guide-bubble.v17-ruby-ready {
+    padding-top: 14px;
+    line-height: 1.68;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level.active .activity-head .speak.v19-audio-pill,
+  .level.active #stageFeedback {
+    transition: none;
+  }
+}
