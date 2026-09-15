@@ -21,13 +21,17 @@
     plumBloom: ROOT + 'xuemei-blossom-close-v20.jpg',
     flowerBase: BASE + 'flowers-bg-clean-v10.jpg',
     flowerCompost: ROOT + 'flowers-compost-action-v20.jpg',
+    flowerCompostSettled: ROOT + 'flowers-compost-settled-v20.jpg',
     flowerFertilizer: ROOT + 'flowers-fertilizer-action-v20.jpg',
+    flowerFertilizerSettled: ROOT + 'flowers-fertilizer-settled-v20.jpg',
     flowerWater: ROOT + 'flowers-watering-action-v20.jpg',
     flowerSprout: ROOT + 'flowers-sprout-field-v20.jpg',
     flowerYoung: ROOT + 'flowers-young-field-v20.jpg',
     flowerBloom: ROOT + 'flowers-bloom-field-v20.jpg',
     studyGarden: V19 + 'study-garden-v19.jpg',
     studySeed: ROOT + 'study-seed-action-v20.jpg',
+    studySoilAction: ROOT + 'study-soil-cover-action-v20.jpg',
+    studyCovered: ROOT + 'study-soil-covered-v20.jpg',
     studyWater: ROOT + 'study-watering-action-v20.jpg',
     studySprout: ROOT + 'study-sprout-final-v20.jpg'
   });
@@ -137,8 +141,8 @@
   }
 
   function flowerShots(effect) {
-    if (effect === 'compost') return phaseShots(scenes.flowerBase, scenes.flowerCompost, scenes.flowerCompost);
-    if (effect === 'fertilize') return phaseShots(scenes.flowerBase, scenes.flowerFertilizer, scenes.flowerFertilizer);
+    if (effect === 'compost') return phaseShots(scenes.flowerBase, scenes.flowerCompost, scenes.flowerCompostSettled);
+    if (effect === 'fertilize') return phaseShots(scenes.flowerBase, scenes.flowerFertilizer, scenes.flowerFertilizerSettled);
     if (effect === 'water') return phaseShots(scenes.flowerBase, scenes.flowerWater, scenes.flowerSprout);
     if (effect === 'sprout') return phaseShots(scenes.flowerBase, scenes.flowerSprout, scenes.flowerSprout);
     if (effect === 'young') return phaseShots(scenes.flowerSprout, scenes.flowerYoung, scenes.flowerYoung);
@@ -166,7 +170,7 @@
 
   function studyShots(effect) {
     if (effect === 'seed') return phaseShots(scenes.studyGarden, scenes.studySeed, scenes.studySeed);
-    if (effect === 'soil-cover') return phaseShots(scenes.studySeed, scenes.studySeed, scenes.studySeed);
+    if (effect === 'soil-cover') return phaseShots(scenes.studySeed, scenes.studySoilAction, scenes.studyCovered);
     if (effect === 'water') return phaseShots(scenes.studyGarden, scenes.studyWater, scenes.studyWater);
     if (effect === 'night-wait') return phaseShots(scenes.studyWater, scenes.studyGarden, scenes.studyGarden);
     return phaseShots(scenes.studyGarden, scenes.studySprout, scenes.studySprout);
@@ -177,7 +181,7 @@
     if (effect === 'seed') {
       action = '<div class="v20-seed-contact"><i></i><b></b></div><div class="v20-pot-soil-puff">' + particles('v20-pot-soil-grain', 18, 5) + '</div>';
     } else if (effect === 'soil-cover') {
-      action = '<div class="v20-soil-cover-hand"></div><div class="v20-pot-soil-puff v20-cover-puff">' + particles('v20-pot-soil-grain', 26, 9) + '</div><div class="v20-covered-hole"></div>';
+      action = '<div class="v20-pot-soil-puff v20-cover-puff">' + particles('v20-pot-soil-grain', 26, 9) + '</div><div class="v20-study-glints">' + particles('v20-natural-glint', 7, 76) + '</div>';
     } else if (effect === 'water') {
       action = '<div class="v20-study-water-stream"><i></i><i></i><i></i><i></i></div><div class="v20-study-water-contact">' + particles('v20-water-splash', 17, 29) + '</div><div class="v20-pot-drink"></div>';
     } else if (effect === 'night-wait') {
